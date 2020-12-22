@@ -3,10 +3,10 @@ kind: KafkaTopic
 metadata:
   name: images
   labels:
-    strimzi.io/cluster: modh-demo
+    strimzi.io/cluster: object-detection
 spec:
   partitions: 1
   replicas: 1
-  topicName: broadcast
+  topicName: images
   config:
-    retention.ms: 0
+    retention.ms: 7200000

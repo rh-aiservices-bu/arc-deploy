@@ -1,7 +1,9 @@
 apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
 metadata:
-  name: modh-demo
+  name: object-detection
+  labels:
+    app: object-detection-common
 spec:
   kafka:
     version: 2.6.0
