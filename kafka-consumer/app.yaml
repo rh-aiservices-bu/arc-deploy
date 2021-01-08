@@ -84,13 +84,14 @@ items:
           envFrom:
             - configMapRef:
                 name: object-detection
-          resources:
-            requests:
-              cpu: 2000m
-              memory: 6000Mi
-            limits:
-              cpu: 2000m
-              memory: 8000Mi
+          resources: {}
+#          resources:
+#            requests:
+#              cpu: 2000m
+#              memory: 4000Mi
+#            limits:
+#              cpu: 2000m
+#              memory: 6000Mi
 - apiVersion: v1
   kind: Service
   metadata:

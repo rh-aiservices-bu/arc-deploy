@@ -12,10 +12,13 @@ oc apply -f "${DIR}/app.yaml"
 #oc new-app python:3.8-ubi8~https://github.com/csds-bu/object-detection-rest.git \
 #-l 'app.kubernetes.io/component=object-detection-rest' \
 #-l 'app.kubernetes.io/instance=object-detection-rest' \
-#-l 'app.kubernetes.io/part-of=object-detection-rest'
+#-l 'app.kubernetes.io/part-of=object-detection-rest' \
+#-o  yaml > "rest-service/sample-app.yaml"
 #
 #
 #oc expose svc/object-detection-rest \
 #-l 'app.kubernetes.io/component=object-detection-rest' \
 #-l 'app.kubernetes.io/instance=object-detection-rest' \
-#-l 'app.kubernetes.io/part-of=object-detection-rest'
+#-l 'app.kubernetes.io/part-of=object-detection-rest' \
+#-o  yaml > "rest-service/sample-route.yaml"
+
