@@ -1,10 +1,11 @@
 apiVersion: v1
-kind: List
-metadata: {}
 items:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
     labels:
       app: object-detection-kafka-consumer
       app.kubernetes.io/component: object-detection-kafka-consumer
@@ -19,6 +20,9 @@ items:
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
     labels:
       app: object-detection-kafka-consumer
       app.kubernetes.io/component: object-detection-kafka-consumer
@@ -45,6 +49,12 @@ items:
           namespace: openshift
       type: Source
     triggers:
+    - github:
+        secret: -mqd3qgIvrYys3ikU2I0
+      type: GitHub
+    - generic:
+        secret: TTnLo1XGMdeP36O9TSW8
+      type: Generic
     - type: ConfigChange
     - imageChange: {}
       type: ImageChange
@@ -55,6 +65,8 @@ items:
   metadata:
     annotations:
       image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"object-detection-kafka-consumer:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"object-detection-kafka-consumer\")].image"}]'
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
     labels:
       app: object-detection-kafka-consumer
       app.kubernetes.io/component: object-detection-kafka-consumer
@@ -70,33 +82,27 @@ items:
     strategy: {}
     template:
       metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
         labels:
           app.kubernetes.io/part-of: object-detection-kafka-consumer
           deployment: object-detection-kafka-consumer
       spec:
         containers:
         - image: ' '
-          imagePullPolicy: Always
           name: object-detection-kafka-consumer
           ports:
           - containerPort: 8080
             protocol: TCP
-          envFrom:
-            - configMapRef:
-                name: object-detection
-            - secretRef:
-                name: object-detection
           resources: {}
-#          resources:
-#            requests:
-#              cpu: 2000m
-#              memory: 4000Mi
-#            limits:
-#              cpu: 2000m
-#              memory: 6000Mi
+  status: {}
 - apiVersion: v1
   kind: Service
   metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    creationTimestamp: null
     labels:
       app: object-detection-kafka-consumer
       app.kubernetes.io/component: object-detection-kafka-consumer
@@ -114,4 +120,5 @@ items:
       deployment: object-detection-kafka-consumer
   status:
     loadBalancer: {}
-
+kind: List
+metadata: {}

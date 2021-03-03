@@ -35,7 +35,7 @@ items:
     resources: {}
     source:
       git:
-        uri: https://github.com/csds-bu/object-detection-rest.git
+        uri: https://github.com/rh-aiservices-bu/object-detection-rest.git
       type: Git
     strategy:
       sourceStrategy:

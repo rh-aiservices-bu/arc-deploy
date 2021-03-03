@@ -62,6 +62,8 @@ items:
           envFrom:
             - configMapRef:
                 name: object-detection
+            - secretRef:
+                name: object-detection
           resources: {}
 #          resources:
 #            requests:

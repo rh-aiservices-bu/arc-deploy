@@ -26,15 +26,27 @@ endif
 
 ##################################
 
-.PHONY: deploy-prereqs
-deploy-prereqs: login
-	./prereq/deploy.sh
+.PHONY: deploy-kafka
+deploy-kafka: login
+	./kafka/deploy.sh
 
 ##################################
 
-.PHONY: undeploy-prereqs
-undeploy-prereqs: login
-	./prereq/undeploy.sh
+.PHONY: undeploy-kafka
+undeploy-kafka: login
+	./kafka/undeploy.sh
+
+##################################
+
+.PHONY: deploy-common
+deploy-common: login
+	./common/deploy.sh
+
+##################################
+
+.PHONY: undeploy-common
+undeploy-common: login
+	./common/undeploy.sh
 
 ##################################
 
