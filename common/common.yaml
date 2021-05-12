@@ -16,7 +16,7 @@ parameters:
   - name: KAFKA_TOPIC_IMAGES
   - name: KAFKA_TOPIC_OBJECTS
   - name: OBJECT_DETECTION_URL
-    value: "http://object-detection-rest:8080/prediction"
+    value: "http://object-detection-rest:8080/predictions"
 
 objects:
   - apiVersion: v1
