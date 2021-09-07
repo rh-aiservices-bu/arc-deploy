@@ -22,7 +22,7 @@ objects:
   - apiVersion: v1
     kind: Secret
     metadata:
-      name: object-detection
+      name: object-detection-kafka
       labels:
         app: object-detection-common
         app.kubernetes.io/component: object-detection-common
@@ -41,7 +41,7 @@ objects:
   - apiVersion: v1
     kind: ConfigMap
     metadata:
-      name: object-detection
+      name: object-detection-rest
       labels:
         app: object-detection-common
         app.kubernetes.io/component: object-detection-common

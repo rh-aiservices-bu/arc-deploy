@@ -1,20 +1,29 @@
-DEFAULT_ENV_FILE := .env.default
+DEFAULT_ENV_FILE := .env
 ifneq ("$(wildcard $(DEFAULT_ENV_FILE))","")
 include ${DEFAULT_ENV_FILE}
 export $(shell sed 's/=.*//' ${DEFAULT_ENV_FILE})
 endif
 
-ENV_FILE := .env
+ENV_FILE := .env.local
 ifneq ("$(wildcard $(ENV_FILE))","")
 include ${ENV_FILE}
 export $(shell sed 's/=.*//' ${ENV_FILE})
 endif
 
 
+##################################
+
+.PHONY: deploy
+deploy: deploy-kafka deploy-common deploy-app deploy-rest-service deploy-kafka-consumer
 
 ##################################
 
-.PHONY: login
+.PHONY: undeploy
+undeploy: undeploy-kafka-consumer undeploy-rest-service undeploy-app undeploy-common undeploy-kafka
+
+##################################
+
+.PHONY:
 login:
 ifdef OC_TOKEN
 	$(info **** Using OC_TOKEN for login ****)
@@ -27,71 +36,61 @@ endif
 ##################################
 
 .PHONY: deploy-kafka
-deploy-kafka: login
+deploy-kafka:
 	./kafka/deploy.sh
 
 ##################################
 
 .PHONY: undeploy-kafka
-undeploy-kafka: login
+undeploy-kafka:
 	./kafka/undeploy.sh
 
 ##################################
 
 .PHONY: deploy-common
-deploy-common: login
+deploy-common:
 	./common/deploy.sh
 
 ##################################
 
 .PHONY: undeploy-common
-undeploy-common: login
+undeploy-common:
 	./common/undeploy.sh
 
 ##################################
 
 .PHONY: deploy-app
-deploy-app: login
+deploy-app:
 	./app/deploy.sh
 
 ##################################
 
 .PHONY: undeploy-app
-undeploy-app: login
+undeploy-app:
 	./app/undeploy.sh
 
 ##################################
 
 .PHONY: deploy-rest-service
-deploy-rest-service: login
+deploy-rest-service:
 	./rest-service/deploy.sh
 
 ##################################
 
 .PHONY: undeploy-rest-service
-undeploy-rest-service: login
+undeploy-rest-service:
 	./rest-service/undeploy.sh
 
 ##################################
 
 .PHONY: deploy-kafka-consumer
-deploy-kafka-consumer: login
+deploy-kafka-consumer:
 	./kafka-consumer/deploy.sh
 
 ##################################
 
 .PHONY: undeploy-kafka-consumer
-undeploy-kafka-consumer: login
+undeploy-kafka-consumer:
 	./kafka-consumer/undeploy.sh
-
-##################################
-
-.PHONY: deploy
-deploy: login deploy-prereqs deploy-app deploy-rest-service deploy-kafka-consumer
-
-##################################
-
-.PHONY: undeploy
-deploy: login undeploy-kafka-consumer undeploy-rest-service undeploy-app undeploy-prereqs
 
 ##################################
