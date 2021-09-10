@@ -14,10 +14,11 @@ Prerequesites:
 
 ## Deploying to an OpenShift Cluster
 
-#### Log in to your cluster
+#### Log in to your cluster and set your project
 ```shell
 $ oc login --token=sha256~_mytoken --server=https://api.mycluster.com:6443
 Logged into "https://api.mycluster.com:6443" as "user" using the token provided.
+$ oc new-project object-detection-demo
 ```
 **Alternatively**, you can add login information to your `.env.local` and execute it as part of your scripts
 

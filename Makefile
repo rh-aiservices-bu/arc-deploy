@@ -32,6 +32,11 @@ else
 	$(info **** Using OC_USER and OC_PASSWORD for login ****)
 	oc login ${OC_URL} -u ${OC_USER} -p ${OC_PASSWORD} --insecure-skip-tls-verify=true
 endif
+ifdef OC_PROJECT
+	$(info **** Setting project ****)
+	oc project ${OC_PROJECT} 2> /dev/null || oc new-project ${OC_PROJECT}
+	oc project
+endif
 
 ##################################
 
