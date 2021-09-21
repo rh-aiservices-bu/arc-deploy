@@ -3,14 +3,14 @@ Object Detection Sample App Setup
 
 A Sample App that detects objects
 
-- Kafka instance 
+- Kafka instance
 - Web application
 - Object Detection REST service
 - Object Detection Kafka consumer
 
 Prerequesites:
 - OpenShift (tested on 4.7)
-- Installed Strimzi Operator (tested on 0.23.0) 
+- Installed Strimzi Operator (tested on 0.23.0)
 
 ## Make commands:
 - `make login` - Logs into a cluster and creates/sets project if desired.
@@ -66,12 +66,12 @@ $ make login
 #### Using your Fork
 If you forked the service/consumer repos, you can edit the `.env.local` to build from your own [source to image](https://github.com/openshift/source-to-image) repository.
 ```.dotenv
-REST_SERVICE_GIT_REPO=https://github.com/your-org/object-detection-service.git
+REST_SERVICE_GIT_REPO=https://github.com/your-org/object-detection-rest.git
 KAFKA_CONSUMER_GIT_REPO=https://github.com/your-org/object-detection-kafka-consumer.git
 ```
 
 #### Execute Deployment
-While logged into your cluster, execute the deployment scripts.  This will enter 
+While logged into your cluster, execute the deployment scripts.  This will enter
 ```shell script
 $ make deploy
 ```
