@@ -9,4 +9,3 @@ oc new-app python:3.8-ubi8~https://github.com/rh-aiservices-bu/object-detection-
 -l 'app.kubernetes.io/part-of=object-detection-rest'
 
 oc expose svc/object-detection-rest
-oc set env deployment/object-detection-app --from=configmap/object-detection-rest

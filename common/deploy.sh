@@ -30,5 +30,5 @@ if [[ -n "${OBJECT_DETECTION_URL}" ]]; then
   PARAMS="${PARAMS} -p OBJECT_DETECTION_URL=${OBJECT_DETECTION_URL}"
 fi
 
-oc process -f "${DIR}/common.yaml" ${PARAMS} | oc create -f -
+oc process -f "${DIR}/common.yaml" ${PARAMS} | oc apply -f -
 
