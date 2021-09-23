@@ -3,7 +3,7 @@ printf "\n\n######## deploy app ########\n"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-oc new-app nodejs:14-ubi8~https://github.com/rh-aiservices-bu/object-detection-app.git \
+oc new-app nodejs:14-ubi8~${APP_GIT_REPO} \
 -l 'app.kubernetes.io/component=object-detection-app' \
 -l 'app.kubernetes.io/instance=object-detection-app' \
 -l 'app.kubernetes.io/part-of=object-detection-app'
