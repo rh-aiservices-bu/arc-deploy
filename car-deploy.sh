@@ -84,8 +84,11 @@ oc -n ${CAR_NS} create route edge car-app \
 oc -n ${CAR_NS} apply -f  ./route.yaml
 
 
+
 # # oc -n ${CAR_NS} set env deployment/car-app --from=secret/object-detection-kafka
 oc -n ${CAR_NS} set env deployment/car-app --from=configmap/object-detection-rest
+
+oc -n ${CAR_NS} rollout restart deployment car-app
 
 
 # python
@@ -130,3 +133,22 @@ oc -n ${CAR_NS} set env deployment/car-app --from=configmap/object-detection-res
 # ADMIN_PASSWORD=mypassword
 # $ oc new-app ruby-helloworld-sample --param-file=helloworld.params
 # $ cat helloworld.params | oc new-app ruby-helloworld-sample --param-file=-
+
+
+# printf "\n\n######## deploy object detection kafka instance ########\n"
+
+# install the strimzi operator.
+
+oc apply -f ./strimzi.sub.yaml
+
+oc -n ${CAR_NS} apply -f "kafka/resources/object-detection-kafka.yaml"
+
+oc  -n ${CAR_NS} wait kafka/object-detection --for=condition=Ready --timeout=300s
+
+
+# printf "\n\n######## deploy object detection kafka topics ########\n"
+
+oc apply -f "kafka/resources/images-topic.yaml"
+oc apply -f "kafka/resources/objects-topic.yaml"
+
+
