@@ -1,5 +1,47 @@
-Object Detection Sample App Setup
-=======================
+# CAR deployment
+
+Coupons Augmented Reality is a 3-part app deployed on OpenShift.
+
+This repo contains the code needed to get it running in your OpenShift environment
+
+## Requirements
+
+* OpenShift (tested on 4.9)
+* Strimzi Operator (maybe)
+* Ability to create a Namespace
+* `oc` cli connected to your cluster
+* bash prompt
+
+## Variables you can change
+
+```
+GIT_ORG="https://github.com/rh-aiservices-bu"
+GIT_PREFIX="${GIT_ORG}/car-"
+APP_GIT_REPO="${GIT_PREFIX}app"
+REST_GIT_REPO="${GIT_PREFIX}rest"
+KAFKA_GIT_REPO="${GIT_PREFIX}kafka"
+GIT_REF="main"
+```
+
+## Variables with defaults
+
+```
+OBJECT_DETECTION_URL=http://car-rest:8080/predictions
+KAFKA_BOOTSTRAP_SERVER=object-detection-kafka-bootstrap:9092
+```
+
+
+goals:
+* deploy it all with a single shell script - first.
+* write one app in such a way that it can deployed with oc process or with argo
+*
+
+
+
+
+
+
+<!-- =======================
 
 A Sample App that detects objects
 
@@ -112,4 +154,4 @@ $ make deploy-common deploy-app deploy-kafka-consumer deploy-rest-service
 
 
 ## Known Issues
-- The first request to Tensorflow is slow as it loads up the model.
+- The first request to Tensorflow is slow as it loads up the model. -->
