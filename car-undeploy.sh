@@ -32,3 +32,6 @@ oc -n ${CAR_NS} \
     delete all \
     -l app=car-app
 
+oc -n ${CAR_NS} \
+    delete all \
+    -l 'app.kubernetes.io/part-of=car'
