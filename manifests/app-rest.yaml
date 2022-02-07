@@ -2,104 +2,116 @@
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
-  # annotations:
-  #   openshift.io/generated-by: OpenShiftNewApp
-  # creationTimestamp: null
+  name: car-rest
   labels:
     app: car-rest
     app.kubernetes.io/component: car-rest
     app.kubernetes.io/instance: car-rest
     app.kubernetes.io/part-of: car
-  name: car-rest
 spec:
-  # nodeSelector: null
+  nodeSelector: null
   output:
     to:
       kind: ImageStreamTag
-      name: car-rest:latest
+      name: 'car-rest:latest'
   postCommit: {}
   resources: {}
-  source:
-    git:
-      ref: main
-      uri: https://github.com/rh-aiservices-bu/car-rest
-    type: Git
   strategy:
+    type: Source
     sourceStrategy:
       from:
         kind: ImageStreamTag
-        name: python:3.8-ubi8
         namespace: openshift
-    type: Source
+        name: 'python:3.8-ubi8'
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/rh-aiservices-bu/car-rest'
+      ref: main
   triggers:
-  # - github:
-  #     secret: SLtfcKBz6ztlfusnOidy
-  #   type: GitHub
-  # - generic:
-  #     secret: 79jaLtH97SYKdWxfmiun
-    # type: Generic
-  - type: ConfigChange
-  - imageChange: {}
-    type: ImageChange
-# status:
-#   lastVersion: 0
+    - type: GitHub
+      github:
+        secret: oV6VYLRRGcP8WvrCpet0
+    - type: Generic
+      generic:
+        secret: tsQn1wkx5n8POz-2k2td
+    - type: ConfigChange
+    - type: ImageChange
+      imageChange: {}
+  runPolicy: Serial
 ---
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
   annotations:
-    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"car-rest:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"car-rest\")].image"}]'
-    openshift.io/generated-by: OpenShiftNewApp
-  # creationTimestamp: null
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"car-rest:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"car-rest\")].image"}]
+  name: car-rest
   labels:
     app: car-rest
     app.kubernetes.io/component: car-rest
     app.kubernetes.io/instance: car-rest
     app.kubernetes.io/part-of: car
-  name: car-rest
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/part-of: car
       deployment: car-rest
-  strategy: {}
   template:
     metadata:
-      # annotations:
-      #   openshift.io/generated-by: OpenShiftNewApp
-      # creationTimestamp: null
       labels:
         app.kubernetes.io/part-of: car
         deployment: car-rest
     spec:
       containers:
-      - image: ' '
-        name: car-rest
-        ports:
-        - containerPort: 8080
-          protocol: TCP
-         resources: {}
-# status: {}
+        - name: car-rest
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/car-dev/car-rest@sha256:1cae4fdc80acee36e4fa2efb802a3fbb0cfe864864dca411663d9d5d7ef367c2
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
 ---
-apiVersion: v1
 kind: Service
+apiVersion: v1
 metadata:
-  # annotations:
-  #   openshift.io/generated-by: OpenShiftNewApp
-  # creationTimestamp: null
+  name: car-rest
   labels:
     app: car-rest
     app.kubernetes.io/component: car-rest
     app.kubernetes.io/instance: car-rest
     app.kubernetes.io/part-of: car
-  name: car-rest
 spec:
+  # clusterIP: 172.30.91.249
+  ipFamilies:
+    - IPv4
   ports:
-  - name: 8080-tcp
-    port: 8080
-    protocol: TCP
-    targetPort: 8080
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  internalTrafficPolicy: Cluster
+  # clusterIPs:
+  #   - 172.30.91.249
+  type: ClusterIP
+  ipFamilyPolicy: SingleStack
+  sessionAffinity: None
   selector:
     app.kubernetes.io/part-of: car
     deployment: car-rest
