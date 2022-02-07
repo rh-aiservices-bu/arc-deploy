@@ -3,8 +3,8 @@ kind: KafkaTopic
 metadata:
   name: images
   labels:
-    strimzi.io/cluster: object-detection
-    app: object-detection-kafka
+    strimzi.io/cluster: car
+    app: car-kafka
 spec:
   partitions: 1
   replicas: 1

@@ -2,9 +2,9 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
-  name: object-detection
+  name: car
   labels:
-    app: object-detection-kafka
+    app: car-kafka
 spec:
   kafka:
     replicas: 1

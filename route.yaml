@@ -1,0 +1,20 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  creationTimestamp: null
+  labels:
+    app: car-app
+    app.kubernetes.io/component: car-app
+    app.kubernetes.io/instance: car-app
+    app.kubernetes.io/part-of: car
+  name: car-app
+spec:
+  port:
+    targetPort: 8080-tcp
+  tls:
+    termination: edge
+  to:
+    kind: ""
+    name: car-app
+    weight: null
+status: {}
