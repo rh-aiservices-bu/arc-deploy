@@ -35,3 +35,5 @@ oc -n ${CAR_NS} \
 oc -n ${CAR_NS} \
     delete all \
     -l 'app.kubernetes.io/part-of=car'
+
+oc delete ns ${CAR_NS}

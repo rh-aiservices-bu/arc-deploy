@@ -23,7 +23,8 @@ GIT_ORG="${GIT_ORG:-"https://github.com/rh-aiservices-bu"}"
 GIT_PREFIX="${GIT_PREFIX:-"${GIT_ORG}/car-"}"
 GIT_REF="${GIT_REF:-"main"}"
 
-APP_GIT_REPO="${APP_GIT_REPO:-"${GIT_PREFIX}app#${GIT_REF}"}"
+APP_GIT_REPO="${APP_GIT_REPO:-"${GIT_PREFIX}app#dev"}"
+#APP_GIT_REPO="${APP_GIT_REPO:-"${GIT_PREFIX}app#main"}"
 REST_GIT_REPO="${REST_GIT_REPO:-"${GIT_PREFIX}rest#${GIT_REF}"}"
 KAFKA_GIT_REPO="${KAFKA_GIT_REPO:-"${GIT_PREFIX}kafka#${GIT_REF}"}"
 CAR_NS="car-dev"
@@ -31,9 +32,10 @@ CAR_NS="car-dev"
 ## Variables with defaults
 
 OBJECT_DETECTION_URL="http://car-rest:8080/predictions"
-KAFKA_BOOTSTRAP_SERVER="object-detection-kafka-bootstrap:9092"
+# KAFKA_BOOTSTRAP_SERVER="object-detection-kafka-bootstrap:9092"
 
-KAFKA_BOOTSTRAP_SERVER=object-detection-kafka-bootstrap:9092
+# add .namespace in kafka bootstrap. (car-kafka-bootstrap.car-dev.svc.cluster.local)
+KAFKA_BOOTSTRAP_SERVER="car-kafka-bootstrap:9092"
 KAFKA_SECURITY_PROTOCOL=PLAINTEXT
 KAFKA_SASL_MECHANISM=
 KAFKA_USERNAME=
@@ -124,7 +126,7 @@ oc -n ${CAR_NS} apply -f  ./route.yaml
 
 
 # # oc -n ${CAR_NS} set env deployment/car-app --from=secret/object-detection-kafka
-oc -n ${CAR_NS} set env deployment/car-app --from=configmap/object-detection-rest
+oc -n ${CAR_NS} set env deployment/car-app --from=configmap/car-rest
 
 oc -n ${CAR_NS} rollout restart deployment car-app
 
@@ -181,7 +183,7 @@ oc apply -f ./strimzi.sub.yaml
 
 oc -n ${CAR_NS} apply -f "kafka/resources/object-detection-kafka.yaml"
 
-oc  -n ${CAR_NS} wait kafka/object-detection --for=condition=Ready --timeout=300s
+oc  -n ${CAR_NS} wait kafka/car --for=condition=Ready --timeout=300s
 
 
 # printf "\n\n######## deploy object detection kafka topics ########\n"
@@ -199,7 +201,8 @@ oc -n ${CAR_NS} new-app python:3.8-ubi8~${KAFKA_GIT_REPO} \
 
 oc -n ${CAR_NS} apply -f  ./new-app-kafka-cons.yaml
 
-# oc -n ${CAR_NS} set env deployment/car-kafka-consumer --from=secret/car-kafka
+oc -n ${CAR_NS} set env deployment/car-kafka-consumer --from=secret/car-kafka
 oc -n ${CAR_NS} set env deployment/car-app --from=secret/car-kafka
+oc -n ${CAR_NS} set env deployment/car-kafka-consumer --from=secret/car-kafka
 
 oc -n ${CAR_NS} rollout restart deployment car-app
