@@ -1,0 +1,107 @@
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  # annotations:
+  #   openshift.io/generated-by: OpenShiftNewApp
+  # creationTimestamp: null
+  labels:
+    app: car-rest
+    app.kubernetes.io/component: car-rest
+    app.kubernetes.io/instance: car-rest
+    app.kubernetes.io/part-of: car
+  name: car-rest
+spec:
+  # nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: car-rest:latest
+  postCommit: {}
+  resources: {}
+  source:
+    git:
+      ref: main
+      uri: https://github.com/rh-aiservices-bu/car-rest
+    type: Git
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: python:3.8-ubi8
+        namespace: openshift
+    type: Source
+  triggers:
+  # - github:
+  #     secret: SLtfcKBz6ztlfusnOidy
+  #   type: GitHub
+  # - generic:
+  #     secret: 79jaLtH97SYKdWxfmiun
+    # type: Generic
+  - type: ConfigChange
+  - imageChange: {}
+    type: ImageChange
+# status:
+#   lastVersion: 0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"car-rest:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"car-rest\")].image"}]'
+    openshift.io/generated-by: OpenShiftNewApp
+  # creationTimestamp: null
+  labels:
+    app: car-rest
+    app.kubernetes.io/component: car-rest
+    app.kubernetes.io/instance: car-rest
+    app.kubernetes.io/part-of: car
+  name: car-rest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: car
+      deployment: car-rest
+  strategy: {}
+  template:
+    metadata:
+      # annotations:
+      #   openshift.io/generated-by: OpenShiftNewApp
+      # creationTimestamp: null
+      labels:
+        app.kubernetes.io/part-of: car
+        deployment: car-rest
+    spec:
+      containers:
+      - image: ' '
+        name: car-rest
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+         resources: {}
+# status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  # annotations:
+  #   openshift.io/generated-by: OpenShiftNewApp
+  # creationTimestamp: null
+  labels:
+    app: car-rest
+    app.kubernetes.io/component: car-rest
+    app.kubernetes.io/instance: car-rest
+    app.kubernetes.io/part-of: car
+  name: car-rest
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/part-of: car
+    deployment: car-rest
+status:
+  loadBalancer: {}
