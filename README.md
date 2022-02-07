@@ -17,17 +17,17 @@ This repo contains the code needed to get it running in your OpenShift environme
 ```
 GIT_ORG="https://github.com/rh-aiservices-bu"
 GIT_PREFIX="${GIT_ORG}/car-"
-APP_GIT_REPO="${GIT_PREFIX}app"
-REST_GIT_REPO="${GIT_PREFIX}rest"
-KAFKA_GIT_REPO="${GIT_PREFIX}kafka"
 GIT_REF="main"
+APP_GIT_REPO="${GIT_PREFIX}app#{GIT_REF}"
+REST_GIT_REPO="${GIT_PREFIX}rest#{GIT_REF}"
+KAFKA_GIT_REPO="${GIT_PREFIX}kafka#{GIT_REF}"
 ```
 
 ## Variables with defaults
 
 ```
 OBJECT_DETECTION_URL=http://car-rest:8080/predictions
-KAFKA_BOOTSTRAP_SERVER=object-detection-kafka-bootstrap:9092
+KAFKA_BOOTSTRAP_SERVER=car-kafka-bootstrap:9092
 ```
 
 
@@ -36,9 +36,16 @@ goals:
 * write one app in such a way that it can deployed with oc process or with argo
 *
 
+Inputs:
+ * URL/ref for 3 distinct git repos
+ * namespace
 
 
-
+* ./manifests/
+*    -.yaml
+*  argoCD  deployment
+   *  4 input: ns + 3 git repos.
+*  tekton
 
 
 <!-- =======================

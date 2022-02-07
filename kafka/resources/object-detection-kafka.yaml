@@ -5,6 +5,7 @@ metadata:
   name: car
   labels:
     app: car-kafka
+    app.kubernetes.io/part-of: car
 spec:
   kafka:
     replicas: 1

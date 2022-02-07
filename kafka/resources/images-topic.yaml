@@ -5,6 +5,7 @@ metadata:
   labels:
     strimzi.io/cluster: car
     app: car-kafka
+    app.kubernetes.io/part-of: car
 spec:
   partitions: 1
   replicas: 1
