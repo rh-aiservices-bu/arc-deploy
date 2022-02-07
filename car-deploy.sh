@@ -5,15 +5,15 @@
 if oc cluster-info > /dev/null 2>&1 ; then
     # executes this block of code,
     # if some_command would result in:  $? -eq 0
-    printf "\n######\nConnected to an OpenShift Cluster successfully:\n"
+    printf "\nConnected to an OpenShift Cluster successfully:\n"
     # printf "        "
     oc cluster-info | sed 's/^/    /' | grep running
-    printf "\n######\nVersions:\n"
+    printf "\nVersions:\n"
     oc version | sed 's/^/    /'
 else
     # executes this block of code,
     # if some_command would result in:  $? -ne 0
-    printf "\n######\nThe command 'oc cluster-info' does not seem to work. Please fix.\n"
+    printf "\nThe command 'oc cluster-info' does not seem to work. Please fix.\n"
 fi
 
 GIT_ORG="${GIT_ORG:-"https://github.com/rh-aiservices-bu"}"
@@ -24,13 +24,12 @@ GIT_REF="${GIT_REF:-"main"}"
 APP_GIT_REPO="${APP_GIT_REPO:-"${GIT_PREFIX}app#${GIT_REF}"}"
 REST_GIT_REPO="${REST_GIT_REPO:-"${GIT_PREFIX}rest#${GIT_REF}"}"
 KAFKA_GIT_REPO="${KAFKA_GIT_REPO:-"${GIT_PREFIX}kafka#${GIT_REF}"}"
-CAR_NS="${CAR_NS:-"car-main"}"
+CAR_NS="${CAR_NS:-"globex-car-main"}"
 
 
-APP_GIT_REPO=https://github.com/rh-aiservices-bu/car-app#dev
-KAFKA_GIT_REPO=https://github.com/rh-aiservices-bu/car-kafka#dev
-REST_GIT_REPO=https://github.com/rh-aiservices-bu/car-rest#dev
-CAR_NS='globex-dev'
+# APP_GIT_REPO=https://github.com/rh-aiservices-bu/car-app#dev
+# KAFKA_GIT_REPO=https://github.com/rh-aiservices-bu/car-kafka#dev
+# REST_GIT_REPO=https://github.com/rh-aiservices-bu/car-rest#dev
 
 
 ## Variables with defaults
@@ -47,7 +46,7 @@ KAFKA_PASSWORD=
 KAFKA_TOPIC_IMAGES=images
 KAFKA_TOPIC_OBJECTS=objects
 
-printf "\n######\nCreate Namespace \n    "
+printf "\nCreate Namespace \n    "
 
 ## Ensure the right namespace exists
 cat <<EOF | oc apply -f -
@@ -59,7 +58,7 @@ metadata:
 EOF
 
 
-# printf "\n\n######## deploy rest service ########\n"
+# printf "\n\n######## deploy rest service ##"
 
 # DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 export OBJECT_DETECTION_URL="${OBJECT_DETECTION_URL}"
@@ -90,18 +89,19 @@ if [[ -n "${OBJECT_DETECTION_URL}" ]]; then
   PARAMS="${PARAMS} -p OBJECT_DETECTION_URL=${OBJECT_DETECTION_URL}"
 fi
 
-printf "\n######\nEnable Strimzi Operator \n"
+printf "\nEnable Strimzi Operator \n"
 
 oc apply -f ./strimzi.sub.yaml | sed 's/^/    /'
 
 
-printf "\n######\nCreating Common resources \n"
+printf "\nCreating Common resources \n"
 
-oc process -f "common/common.yaml" ${PARAMS} \
+oc -n ${CAR_NS} process -f "common/common.yaml" ${PARAMS} \
   | oc -n ${CAR_NS} apply -f - | sed 's/^/    /'
 
+# echo ${PARAMS}
 
-printf "\n######\nCreating images builds, deployments and services \n"
+printf "\nCreating images builds, deployments and services \n"
 
 printf " # rest \n"
 oc -n ${CAR_NS} new-app \
@@ -142,35 +142,36 @@ oc -n ${CAR_NS} new-app python:3.8-ubi8~${KAFKA_GIT_REPO} \
 
 oc -n ${CAR_NS} apply -f  ./generated/new-app-kafka-cons.yaml | sed 's/^/    /'
 
-printf "\n######\nWaiting for Kafka pod \n"
+printf "\nWaiting for Kafka pod \n"
 oc  -n ${CAR_NS} wait kafka/car \
   --for=condition=Ready --timeout=300s \
   | sed 's/^/    /'
 
-printf "\n######\nCreating Kafka topics \n"
+printf "\nCreating Kafka topics \n"
 oc -n ${CAR_NS} apply -f "kafka/resources/images-topic.yaml" | sed 's/^/    /'
 oc -n ${CAR_NS} apply -f "kafka/resources/objects-topic.yaml" | sed 's/^/    /'
 
-printf "\n######\nApplying env vars \n"
+printf "\nApplying env vars \n"
 oc -n ${CAR_NS} set env deployment/car-app            --from=configmap/car-rest | sed 's/^/    /'
 oc -n ${CAR_NS} set env deployment/car-kafka-consumer --from=secret/car-kafka | sed 's/^/    /'
 oc -n ${CAR_NS} set env deployment/car-app            --from=secret/car-kafka | sed 's/^/    /'
 
-printf "\n######\nCreating Route \n"
+printf "\nCreating Route \n"
 oc -n ${CAR_NS} create route edge car-app \
     --service=car-app \
     --dry-run=client  -o yaml > generated/route.yaml
 oc -n ${CAR_NS} apply -f  ./generated/route.yaml | sed 's/^/    /'
 
-printf "\n######\nRestarting pods \n"
+printf "\nRestarting pods \n"
 oc -n ${CAR_NS} rollout restart deployment car-app | sed 's/^/    /'
+oc -n ${CAR_NS} rollout restart deployment car-kafka-consumer | sed 's/^/    /'
 
 
-# printf "\n\n######## deploy object detection kafka topics ########\n"
+# printf "\n\n######## deploy object detection kafka topics ##"
 
 
 # oc -n ${CAR_NS} rollout restart deployment car-app
-printf "\n######\nURL for this env: \n"
+printf "\nURL for this env: \n"
 printf "    https://$(oc -n ${CAR_NS} describe route car-app | grep Host | awk '{ print $3 }')/\n\n"
 
 exit
@@ -180,6 +181,20 @@ multiple () {
   export APP_GIT_REPO=https://github.com/rh-aiservices-bu/car-app#main
   export KAFKA_GIT_REPO=https://github.com/rh-aiservices-bu/car-kafka#main
   export REST_GIT_REPO=https://github.com/rh-aiservices-bu/car-rest#main
-  oc -n globex-dev delete all --all
+  export CAR_NS='globex-car-main'
+  #oc -n globex-dev delete all --all
   bash car-deploy.sh
+
+  export APP_GIT_REPO=https://github.com/rh-aiservices-bu/car-app#main
+  export KAFKA_GIT_REPO=https://github.com/rh-aiservices-bu/car-kafka#main
+  export REST_GIT_REPO=https://github.com/rh-aiservices-bu/car-rest#main
+  export CAR_NS='globex-car-main'
+  bash car-deploy.sh
+
+  export APP_GIT_REPO=https://github.com/rh-aiservices-bu/car-app#dev
+  export KAFKA_GIT_REPO=https://github.com/rh-aiservices-bu/car-kafka#dev
+  export REST_GIT_REPO=https://github.com/rh-aiservices-bu/car-rest#dev
+  export CAR_NS='globex-car-dev'
+  bash car-deploy.sh
+
 }
