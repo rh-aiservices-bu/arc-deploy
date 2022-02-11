@@ -48,6 +48,24 @@ printf "   oc apply -n rhods-prepull-notebooks -f ./generated/ds_${name}.yaml\n"
 }
 
 
+printf "Creating rolebinding for images\n"
+
+cat <<EOF | oc -n redhat-ods-applications  apply -f -
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: 'notebook-images-prepuller'
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: rhods-prepull-notebooks
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'system:image-puller'
+EOF
+
 printf "run these commands if you want to create the daemonsets\n"
 
 for imagename in $( oc -n redhat-ods-applications get \
