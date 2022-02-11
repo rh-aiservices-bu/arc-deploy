@@ -32,8 +32,8 @@ spec:
       labels:
         name: prepull
     spec:
-      imagePullSecrets:
-        - name: ${secretname}
+#      imagePullSecrets:
+#        - name: ${secretname}
       initContainers:
       - name: prepull-${name}
         image: ${ref}
@@ -60,14 +60,15 @@ for imagename in $( oc -n redhat-ods-applications get \
                 imagestreamtags "${imagename}"  \
                     -o jsonpath="{.image.dockerImageReference}" \
                     )
-    secretname=$(  oc -n rhods-prepull-notebooks get secrets \
-                    | grep 'default-dockercfg-' \
-                    | awk '{ print $1 }' \
-                    )
+#    secretname=$(  oc -n rhods-prepull-notebooks get secrets \
+#                    | grep 'default-dockercfg-' \
+#                    | awk '{ print $1 }' \
+#                    )
     # printf "${imgname}\n"
     # printf "${imgref}\n"
 
-    generate_ds "${imgname}"  "${imgref}" "${secretname}"
+    #generate_ds "${imgname}"  "${imgref}" "${secretname}"
+    generate_ds "${imgname}"  "${imgref}"
 
 done
 
