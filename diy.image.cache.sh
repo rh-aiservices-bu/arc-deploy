@@ -48,7 +48,7 @@ printf "   oc apply -n rhods-prepull-notebooks -f ./generated/ds_${name}.yaml\n"
 
 
 # without this, images cannot be pulled across namespaces
-printf "Creating rolebinding for images\n"
+printf "Creating rolebinding for images\n    "
 
 cat <<EOF | oc -n redhat-ods-applications  apply -f -
 ---
