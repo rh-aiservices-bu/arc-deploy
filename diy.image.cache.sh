@@ -11,7 +11,8 @@ metadata:
   name: rhods-prepull-notebooks
 EOF
 
-
+# function that generates yaml files
+# 1 daemonset per image
 function generate_ds () {
     local name="$1"
     local ref="$2"
@@ -32,8 +33,6 @@ spec:
       labels:
         name: prepull
     spec:
-#      imagePullSecrets:
-#        - name: ${secretname}
       initContainers:
       - name: prepull-${name}
         image: ${ref}
@@ -48,6 +47,7 @@ printf "   oc apply -n rhods-prepull-notebooks -f ./generated/ds_${name}.yaml\n"
 }
 
 
+# without this, images cannot be pulled across namespaces
 printf "Creating rolebinding for images\n"
 
 cat <<EOF | oc -n redhat-ods-applications  apply -f -
@@ -66,6 +66,7 @@ roleRef:
   name: 'system:image-puller'
 EOF
 
+
 printf "run these commands if you want to create the daemonsets\n"
 
 for imagename in $( oc -n redhat-ods-applications get \
@@ -78,17 +79,10 @@ for imagename in $( oc -n redhat-ods-applications get \
                 imagestreamtags "${imagename}"  \
                     -o jsonpath="{.image.dockerImageReference}" \
                     )
-#    secretname=$(  oc -n rhods-prepull-notebooks get secrets \
-#                    | grep 'default-dockercfg-' \
-#                    | awk '{ print $1 }' \
-#                    )
-    # printf "${imgname}\n"
-    # printf "${imgref}\n"
 
-    #generate_ds "${imgname}"  "${imgref}" "${secretname}"
     generate_ds "${imgname}"  "${imgref}"
 
 done
 
 
-exit
+
