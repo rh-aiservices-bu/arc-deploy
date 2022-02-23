@@ -74,7 +74,8 @@ for imagename in $( oc -n redhat-ods-applications get \
                      -o jsonpath="{.items[*].metadata.name}" \
                      ) ; do
 
-    imgname=$(echo "${imagename}" | grep -o '^.*\:' | sed 's/\://' )
+    #imgname=$(echo "${imagename}" | grep -o '^.*\:' | sed 's/\://' )
+    imgname=$(echo "${imagename}" |  sed 's/\:/-/' | sed 's/\./-/g' )
     imgref=$(  oc -n redhat-ods-applications get \
                 imagestreamtags "${imagename}"  \
                     -o jsonpath="{.image.dockerImageReference}" \
