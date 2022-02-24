@@ -1,18 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-rest
-  namespace: openshift-gitops
+  name: app-rest1
+  namespace: argocd-instance
 spec:
   destination:
-    namespace: spring-petclinic
+    namespace: argotest01
     server: https://kubernetes.default.svc
   project: default
   source:
     directory:
       recurse: true
-    path: app
-    repoURL: https://github.com/siamaksade/openshift-gitops-getting-started.git
+    path: manifests
+    repoURL: https://github.com/rh-aiservices-bu/car-deploy.git
     targetRevision: dev
   syncPolicy:
     automated:
