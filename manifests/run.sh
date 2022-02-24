@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# oc delete namespace argotest01
+oc delete namespace argotest01
 
 cat <<EOF | oc apply -f -
 apiVersion: v1

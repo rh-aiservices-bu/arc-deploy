@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: car-rest
-          image: 'rest-image:latest'
+          image: 'car-rest:latest'
           ports:
             - containerPort: 8080
               protocol: TCP

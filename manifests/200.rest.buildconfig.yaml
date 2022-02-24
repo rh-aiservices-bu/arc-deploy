@@ -10,10 +10,6 @@ metadata:
     app.kubernetes.io/part-of: car
 spec:
   nodeSelector: null
-  output:
-    to:
-      kind: ImageStreamTag
-      name: 'rest-image:latest'
   postCommit: {}
   resources: {}
   strategy:
@@ -28,13 +24,17 @@ spec:
     git:
       uri: 'https://github.com/rh-aiservices-bu/car-rest'
       ref: dev
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'car-rest:latest'
   triggers:
-    - type: GitHub
-      github:
-        secret: oV6VYLRRGcP8WvrCpet0
-    - type: Generic
-      generic:
-        secret: tsQn1wkx5n8POz-2k2td
+    # - type: GitHub
+    #   github:
+    #     secret: oV6VYLRRGcP8WvrCpet0
+    # - type: Generic
+    #   generic:
+    #     secret: tsQn1wkx5n8POz-2k2td
     - type: ConfigChange
     - type: ImageChange
       imageChange: {}

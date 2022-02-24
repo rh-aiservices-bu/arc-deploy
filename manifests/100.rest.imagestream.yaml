@@ -2,10 +2,10 @@
 apiVersion: image.openshift.io/v1
 kind: ImageStream
 metadata:
+  name: car-rest
   labels:
-    app.kubernetes.io/name: rest
-    app.kubernetes.io/part-of: rest
-  name: rest-image
+    app.kubernetes.io/name: car-rest
+    app.kubernetes.io/part-of: car
 spec:
   lookupPolicy:
     local: true
