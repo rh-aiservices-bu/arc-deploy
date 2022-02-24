@@ -1,0 +1,19 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: car-rest
+    app.kubernetes.io/component: car-rest
+    app.kubernetes.io/instance: car-rest
+    app.kubernetes.io/part-of: car-rest
+  name: car-rest
+spec:
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: Service
+    name: car-rest
+    weight: 100
+  tls:
+    termination: edge
+  wildcardPolicy: None

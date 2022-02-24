@@ -1,0 +1,27 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: car-rest
+  labels:
+    app: car-rest
+    app.kubernetes.io/component: car-rest
+    app.kubernetes.io/instance: car-rest
+    app.kubernetes.io/part-of: car
+spec:
+  ipFamilies:
+    - IPv4
+  ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  ipFamilyPolicy: SingleStack
+  sessionAffinity: None
+  selector:
+    app.kubernetes.io/part-of: car
+    deployment: car-rest
+status:
+  loadBalancer: {}
