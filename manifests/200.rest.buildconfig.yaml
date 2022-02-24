@@ -1,0 +1,71 @@
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: car-rest
+  labels:
+    app: car-rest
+    app.kubernetes.io/component: car-rest
+    app.kubernetes.io/instance: car-rest
+    app.kubernetes.io/part-of: car
+spec:
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'rest-image:latest'
+  postCommit: {}
+  resources: {}
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        namespace: openshift
+        name: 'python:3.8-ubi8'
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/rh-aiservices-bu/car-rest'
+      ref: dev
+  triggers:
+    - type: GitHub
+      github:
+        secret: oV6VYLRRGcP8WvrCpet0
+    - type: Generic
+      generic:
+        secret: tsQn1wkx5n8POz-2k2td
+    - type: ConfigChange
+    - type: ImageChange
+      imageChange: {}
+  runPolicy: Serial
+# ---
+# kind: Service
+# apiVersion: v1
+# metadata:
+#   name: car-rest
+#   labels:
+#     app: car-rest
+#     app.kubernetes.io/component: car-rest
+#     app.kubernetes.io/instance: car-rest
+#     app.kubernetes.io/part-of: car
+# spec:
+#   # clusterIP: 172.30.91.249
+#   ipFamilies:
+#     - IPv4
+#   ports:
+#     - name: 8080-tcp
+#       protocol: TCP
+#       port: 8080
+#       targetPort: 8080
+#   internalTrafficPolicy: Cluster
+#   # clusterIPs:
+#   #   - 172.30.91.249
+#   type: ClusterIP
+#   ipFamilyPolicy: SingleStack
+#   sessionAffinity: None
+#   selector:
+#     app.kubernetes.io/part-of: car
+#     deployment: car-rest
+# status:
+#   loadBalancer: {}
