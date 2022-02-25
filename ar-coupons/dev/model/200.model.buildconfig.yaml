@@ -27,14 +27,8 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: 'arc-model:latest'
+      name: 'dev-arc-model:latest'
   triggers:
-    # - type: GitHub
-    #   github:
-    #     secret: oV6VYLRRGcP8WvrCpet0
-    # - type: Generic
-    #   generic:
-    #     secret: tsQn1wkx5n8POz-2k2td
     - type: ConfigChange
     - type: ImageChange
       imageChange: {}

@@ -27,7 +27,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: 'arc-frontend:latest'
+      name: 'dev-arc-frontend:latest'
   triggers:
     - type: ConfigChange
     - type: ImageChange
