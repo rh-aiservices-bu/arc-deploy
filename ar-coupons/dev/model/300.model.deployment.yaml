@@ -8,34 +8,34 @@ metadata:
         {
           "from":{
             "kind":"ImageStreamTag",
-            "name":"car-rest:latest"
+            "name":"arc-model:latest"
           },
-          "fieldPath":"spec.template.spec.containers[?(@.name==\"car-rest\")].image"
+          "fieldPath":"spec.template.spec.containers[?(@.name==\"arc-model\")].image"
         }
       ]
-  name: car-rest
+  name: arc-model
   labels:
-    app: car-rest
-    app.kubernetes.io/component: car-rest
-    app.kubernetes.io/instance: car-rest
-    app.kubernetes.io/part-of: car
+    app: arc-model
+    app.kubernetes.io/component: arc-model
+    app.kubernetes.io/instance: arc-model
+    app.kubernetes.io/part-of: arc-dev
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app.kubernetes.io/part-of: car
-      deployment: car-rest
+      app.kubernetes.io/part-of: arc-dev
+      deployment: arc-model
   template:
     metadata:
       annotations:
         alpha.image.policy.openshift.io/resolve-names: '*'
       labels:
-        app.kubernetes.io/part-of: car
-        deployment: car-rest
+        app.kubernetes.io/part-of: arc-dev
+        deployment: arc-model
     spec:
       containers:
-        - name: car-rest
-          image: 'car-rest:latest'
+        - name: arc-model
+          image: 'arc-model:latest'
           ports:
             - containerPort: 8080
               protocol: TCP

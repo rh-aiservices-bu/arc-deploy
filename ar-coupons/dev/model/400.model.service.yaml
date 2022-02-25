@@ -2,12 +2,12 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: car-rest
+  name: arc-model
   labels:
-    app: car-rest
-    app.kubernetes.io/component: car-rest
-    app.kubernetes.io/instance: car-rest
-    app.kubernetes.io/part-of: car
+    app: arc-model
+    app.kubernetes.io/component: arc-model
+    app.kubernetes.io/instance: arc-model
+    app.kubernetes.io/part-of: arc-dev
 spec:
   ipFamilies:
     - IPv4
@@ -21,7 +21,7 @@ spec:
   ipFamilyPolicy: SingleStack
   sessionAffinity: None
   selector:
-    app.kubernetes.io/part-of: car
-    deployment: car-rest
+    app.kubernetes.io/part-of: arc-dev
+    deployment: arc-model
 status:
   loadBalancer: {}

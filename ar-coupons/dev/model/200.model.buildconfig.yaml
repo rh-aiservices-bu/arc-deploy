@@ -2,12 +2,12 @@
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
-  name: car-rest
+  name: arc-model
   labels:
-    app: car-rest
-    app.kubernetes.io/component: car-rest
-    app.kubernetes.io/instance: car-rest
-    app.kubernetes.io/part-of: car
+    app: arc-model
+    app.kubernetes.io/component: arc-model
+    app.kubernetes.io/instance: arc-model
+    app.kubernetes.io/part-of: arc-dev
 spec:
   nodeSelector: null
   postCommit: {}
@@ -27,7 +27,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: 'car-rest:latest'
+      name: 'arc-model:latest'
   triggers:
     # - type: GitHub
     #   github:

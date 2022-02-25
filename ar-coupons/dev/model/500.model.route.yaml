@@ -2,17 +2,17 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   labels:
-    app: car-rest
-    app.kubernetes.io/component: car-rest
-    app.kubernetes.io/instance: car-rest
-    app.kubernetes.io/part-of: car-rest
-  name: car-rest
+    app: arc-model
+    app.kubernetes.io/component: arc-model
+    app.kubernetes.io/instance: arc-model
+    app.kubernetes.io/part-of: arc-dev
+  name: arc-model
 spec:
   port:
     targetPort: 8080-tcp
   to:
     kind: Service
-    name: car-rest
+    name: arc-model
     weight: 100
   tls:
     termination: edge
