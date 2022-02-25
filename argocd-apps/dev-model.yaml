@@ -16,14 +16,11 @@ spec:
     repoURL: https://github.com/rh-aiservices-bu/car-deploy.git
     targetRevision: dev
   syncPolicy:
-    automated: {}
-      #prune: true
-      #selfHeal: true
+    automated:
+      prune: true
+      selfHeal: true
   ignoreDifferences:
   - group: apps
     kind: Deployment
-    #name: car-rest
     jsonPointers:
       - /spec/template/spec/containers/0/image
-    # jqPathExpressions:
-    #   - .spec.template.spec.Containers[].image | select(.name == "arc-model")

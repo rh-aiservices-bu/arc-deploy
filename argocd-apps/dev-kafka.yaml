@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: dev-frontend
+  name: kafka
   namespace: argocd-instance
 spec:
   destination:
@@ -12,7 +12,7 @@ spec:
     directory:
       # I believe I came across a bug then the line below is true
       recurse: false
-    path: ar-coupons/dev/frontend
+    path: ar-coupons/dev/kafka
     repoURL: https://github.com/rh-aiservices-bu/car-deploy.git
     targetRevision: dev
   syncPolicy:
