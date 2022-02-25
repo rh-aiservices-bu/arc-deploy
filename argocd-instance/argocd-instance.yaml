@@ -6,6 +6,12 @@ metadata:
     argocd.argoproj.io/compare-options: IgnoreExtraneous
   name: argocd-instance
 spec:
+  disableAdmin: true
+  rbac:
+    defaultPolicy: 'role:readonly'
+    policy: |
+      g, argo-users, role:admin
+    scopes: '[groups]'
   server:
     insecure: true
     route:
