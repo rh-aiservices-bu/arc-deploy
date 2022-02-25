@@ -43,6 +43,7 @@ printf "\nVerifying quota and oc client\n    "
 printf "\nListing existing clusters\n"
     rosa list cluster | sed 's/^/    /'
 
+
 printf "\nkicking off deployment unless it's already started\n"
 
     if rosa list cluster | grep  "${ROSA_CLUSTER_NAME}" > /dev/null 2>&1 ; then
@@ -123,19 +124,51 @@ printf "\nInstalling addon\n"
 
 printf "\nSetting up default admin account\n"
 
+    #use rosa describe admin --cluster=rosa-demo  here
     if rosa list users --cluster=${ROSA_CLUSTER_NAME}  | grep 'admin'  > /dev/null 2>&1 ; then
         printf "\n    Admin account already exists\n"
     else
         printf "\n    Default admin not found.\n    Creating it\n"
-        rosa create admin \
-           --cluster="${ROSA_CLUSTER_NAME}" \
-            tee .rosa.admin.txt
+        # rosa create admin \
+        #    --cluster="${ROSA_CLUSTER_NAME}" \
+        #     tee .rosa.admin.txt
     fi
 
-    cat  .rosa.admin.txt
+    #cat  .rosa.admin.txt
 
 
 printf "\nSetting up default IDP\n"
+
+    CONSOLE_URL="$( rosa describe cluster --cluster=$ROSA_CLUSTER_NAME | grep -o 'console\-openshift.*apps\.com'  )"
+    API_URL="$( rosa describe cluster --cluster=$ROSA_CLUSTER_NAME | grep -o 'api\..*6443'  )"
+
+    GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-empty}
+    GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-empty}
+
+
+
+    if rosa list idp --cluster=${ROSA_CLUSTER_NAME}  | grep 'RedHat\-SSO'  > /dev/null 2>&1 ; then
+        printf "\n    IDP already added\n"
+    else
+        printf "\n    Adding IDP\n"
+        rosa create idp --type=google \
+            --cluster="${ROSA_CLUSTER_NAME}" \
+            --name RedHat-SSO \
+            --mapping-method claim \
+            --client-id "${GOOGLE_CLIENT_ID}" \
+            --client-secret "${GOOGLE_CLIENT_SECRET}" \
+            --hosted-domain "redhat.com"
+    fi
+
+    printf "\n    Displaying Oauth2Callback URL"
+    printf "https://$CONSOLE_URL/oauth2callback/RedHat-SSO\n" | sed 's/console\-openshift\-console/oauth-openshift/'
+
+printf "\nGranting cluster-admin\n"
+
+    rosa grant user cluster-admin --user="egranger@redhat.com" --cluster=${ROSA_CLUSTER_NAME}
+
+
+
 
 
 
