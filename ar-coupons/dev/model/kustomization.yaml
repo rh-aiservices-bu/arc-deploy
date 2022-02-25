@@ -2,9 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  #- "400.rbac.yaml"
-  - "100.rest.imagestream.yaml"
-  - "200.rest.buildconfig.yaml"
-  - "300.rest.deployment.yaml"
-  - "400.rest.service.yaml"
-  - "500.rest.route.yaml"
+  - "100.model.imagestream.yaml"
+  - "200.model.buildconfig.yaml"
+  - "300.model.deployment.yaml"
+  - "400.model.service.yaml"
+  - "500.model.route.yaml"
