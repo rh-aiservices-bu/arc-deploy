@@ -1,0 +1,41 @@
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: arc-kafkaconsumer
+  labels:
+    app: arc-kafkaconsumer
+    app.kubernetes.io/component: arc-kafkaconsumer
+    app.kubernetes.io/instance: arc-kafkaconsumer
+    app.kubernetes.io/part-of: arc-dev
+spec:
+  nodeSelector: null
+  postCommit: {}
+  resources: {}
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        namespace: openshift
+        name: 'python:3.8-ubi8'
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/rh-aiservices-bu/car-kafka'
+      ref: dev
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'arc-kafkaconsumer:latest'
+  triggers:
+    # - type: GitHub
+    #   github:
+    #     secret: oV6VYLRRGcP8WvrCpet0
+    # - type: Generic
+    #   generic:
+    #     secret: tsQn1wkx5n8POz-2k2td
+    - type: ConfigChange
+    - type: ImageChange
+      imageChange: {}
+  runPolicy: Serial

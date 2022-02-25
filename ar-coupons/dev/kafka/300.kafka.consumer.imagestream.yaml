@@ -1,0 +1,11 @@
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: arc-kafkaconsumer
+  labels:
+    app.kubernetes.io/name: arc-kafkaconsumer
+    app.kubernetes.io/part-of: arc-dev
+spec:
+  lookupPolicy:
+    local: true
