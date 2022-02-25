@@ -34,7 +34,7 @@ KAFKA_BOOTSTRAP_SERVER=car-kafka-bootstrap:9092
 goals:
 * deploy it all with a single shell script - first.
 * write one app in such a way that it can deployed with oc process or with argo
-*
+* include the github web hooks that will trigger rebuilds on commits.
 
 Inputs:
  * URL/ref for 3 distinct git repos
@@ -46,6 +46,18 @@ Inputs:
 *  argoCD  deployment
    *  4 input: ns + 3 git repos.
 *  tekton
+
+
+
+
+URL1=$(oc -n globex-car-dev describe bc/car-app  | grep -o 'https.*github$')
+echo $URL1
+gh_secret=$(oc -n globex-car-dev get bc/car-app -o=jsonpath='{.spec.triggers..github.secret}')
+echo $gh_secret
+
+echo "${URL1}" | sed "s/<secret>/${gh_secret}/g"
+URL2=$(echo "${URL1}" | sed "s/<secret>/${gh_secret}/g")
+
 
 
 <!-- =======================
