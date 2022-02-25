@@ -1,0 +1,35 @@
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: arc-frontend
+  labels:
+    app: arc-frontend
+    app.kubernetes.io/component: arc-frontend
+    app.kubernetes.io/instance: arc-frontend
+    app.kubernetes.io/part-of: arc-dev
+spec:
+  nodeSelector: null
+  postCommit: {}
+  resources: {}
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        namespace: openshift
+        name: 'nodejs:14-ubi8'
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/rh-aiservices-bu/car-app'
+      ref: dev
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'arc-frontend:latest'
+  triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChange: {}
+  runPolicy: Serial

@@ -1,0 +1,57 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  annotations:
+    image.openshift.io/triggers: |-
+      [
+        {
+          "from":{
+            "kind":"ImageStreamTag",
+            "name":"arc-frontend:latest"
+          },
+          "fieldPath":"spec.template.spec.containers[?(@.name==\"arc-frontend\")].image"
+        }
+      ]
+  name: arc-frontend
+  labels:
+    app: arc-frontend
+    app.kubernetes.io/component: arc-frontend
+    app.kubernetes.io/instance: arc-frontend
+    app.kubernetes.io/part-of: arc-dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: arc-dev
+      deployment: arc-frontend
+  template:
+    metadata:
+      annotations:
+        alpha.image.policy.openshift.io/resolve-names: '*'
+      labels:
+        app.kubernetes.io/part-of: arc-dev
+        deployment: arc-frontend
+    spec:
+      containers:
+        - name: arc-frontend
+          image: 'arc-frontend:latest'
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
