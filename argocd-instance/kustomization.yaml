@@ -6,3 +6,5 @@ namespace: argocd-instance
 resources:
   - namespace.yaml
   - argocd-instance.yaml
+  - role.yaml
+  - rolebinding.yaml
