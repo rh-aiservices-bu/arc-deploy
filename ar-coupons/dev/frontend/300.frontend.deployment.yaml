@@ -20,7 +20,7 @@ metadata:
     app.kubernetes.io/instance: arc-frontend
     app.kubernetes.io/part-of: arc-dev
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/part-of: arc-dev
@@ -43,11 +43,19 @@ spec:
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
+          ## this is where we tell it where to find the model interface
+          env:
+            - name: OBJECT_DETECTION_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: arc-frontend
+                  key: OBJECT_DETECTION_URL
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
       securityContext: {}
       schedulerName: default-scheduler
+
   strategy:
     type: RollingUpdate
     rollingUpdate:

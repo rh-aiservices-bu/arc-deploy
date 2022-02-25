@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - "100.frontend.imagestream.yaml"
   - "200.frontend.buildconfig.yaml"
+  - "250.frontend.configmap.yaml"
   - "300.frontend.deployment.yaml"
   - "400.frontend.service.yaml"
   - "500.frontend.route.yaml"
