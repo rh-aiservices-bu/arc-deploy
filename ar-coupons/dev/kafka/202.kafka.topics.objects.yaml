@@ -3,7 +3,7 @@ kind: KafkaTopic
 metadata:
   name: objects
   labels:
-    strimzi.io/cluster: dev-arc
+    strimzi.io/cluster: dev-arc-kafka
     app: dev-arc-kafka
     app.kubernetes.io/part-of: dev-arc
 spec:
