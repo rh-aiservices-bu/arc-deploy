@@ -7,3 +7,7 @@ resources:
   - "100.kafka.instance.yaml"
   - "201.kafka.topics.images.yaml"
   - "202.kafka.topics.objects.yaml"
+  - "300.kafka.consumer.imagestream.yaml"
+  - "400.kafka.consumder.buildconfig.yaml"
+  - "500.kafka.consumer.deployment.yaml"
+  - "600.kafka.consumer.service.yaml"
