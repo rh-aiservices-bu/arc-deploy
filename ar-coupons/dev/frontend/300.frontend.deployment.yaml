@@ -8,34 +8,34 @@ metadata:
         {
           "from":{
             "kind":"ImageStreamTag",
-            "name":"arc-frontend:latest"
+            "name":"dev-arc-frontend:latest"
           },
-          "fieldPath":"spec.template.spec.containers[?(@.name==\"arc-frontend\")].image"
+          "fieldPath":"spec.template.spec.containers[?(@.name==\"dev-arc-frontend\")].image"
         }
       ]
-  name: arc-frontend
+  name: dev-arc-frontend
   labels:
-    app: arc-frontend
-    app.kubernetes.io/component: arc-frontend
-    app.kubernetes.io/instance: arc-frontend
-    app.kubernetes.io/part-of: arc-dev
+    app: dev-arc-frontend
+    app.kubernetes.io/component: dev-arc-frontend
+    app.kubernetes.io/instance: dev-arc-frontend
+    app.kubernetes.io/part-of: dev-arc
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/part-of: arc-dev
-      deployment: arc-frontend
+      app.kubernetes.io/part-of: dev-arc
+      deployment: dev-arc-frontend
   template:
     metadata:
       annotations:
         alpha.image.policy.openshift.io/resolve-names: '*'
       labels:
-        app.kubernetes.io/part-of: arc-dev
-        deployment: arc-frontend
+        app.kubernetes.io/part-of: dev-arc
+        deployment: dev-arc-frontend
     spec:
       containers:
-        - name: arc-frontend
-          image: 'arc-frontend:latest'
+        - name: dev-arc-frontend
+          image: 'dev-arc-frontend:latest'
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -48,7 +48,7 @@ spec:
             - name: OBJECT_DETECTION_URL
               valueFrom:
                 configMapKeyRef:
-                  name: arc-frontend
+                  name: dev-arc-frontend
                   key: OBJECT_DETECTION_URL
       restartPolicy: Always
       terminationGracePeriodSeconds: 30

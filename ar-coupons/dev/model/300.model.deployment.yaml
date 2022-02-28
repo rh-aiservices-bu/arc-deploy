@@ -8,34 +8,34 @@ metadata:
         {
           "from":{
             "kind":"ImageStreamTag",
-            "name":"arc-model:latest"
+            "name":"dev-arc-model:latest"
           },
-          "fieldPath":"spec.template.spec.containers[?(@.name==\"arc-model\")].image"
+          "fieldPath":"spec.template.spec.containers[?(@.name==\"dev-arc-model\")].image"
         }
       ]
-  name: arc-model
+  name: dev-arc-model
   labels:
-    app: arc-model
-    app.kubernetes.io/component: arc-model
-    app.kubernetes.io/instance: arc-model
-    app.kubernetes.io/part-of: arc-dev
+    app: dev-arc-model
+    app.kubernetes.io/component: dev-arc-model
+    app.kubernetes.io/instance: dev-arc-model
+    app.kubernetes.io/part-of: dev-arc
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app.kubernetes.io/part-of: arc-dev
-      deployment: arc-model
+      app.kubernetes.io/part-of: dev-arc
+      deployment: dev-arc-model
   template:
     metadata:
       annotations:
         alpha.image.policy.openshift.io/resolve-names: '*'
       labels:
-        app.kubernetes.io/part-of: arc-dev
-        deployment: arc-model
+        app.kubernetes.io/part-of: dev-arc
+        deployment: dev-arc-model
     spec:
       containers:
-        - name: arc-model
-          image: 'arc-model:latest'
+        - name: dev-arc-model
+          image: 'dev-arc-model:latest'
           ports:
             - containerPort: 8080
               protocol: TCP

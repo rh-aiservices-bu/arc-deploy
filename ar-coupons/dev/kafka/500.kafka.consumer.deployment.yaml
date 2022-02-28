@@ -8,34 +8,34 @@ metadata:
         {
           "from":{
             "kind":"ImageStreamTag",
-            "name":"arc-kafkaconsumer:latest"
+            "name":"dev-arc-kafkaconsumer:latest"
           },
-          "fieldPath":"spec.template.spec.containers[?(@.name==\"arc-kafkaconsumer\")].image"
+          "fieldPath":"spec.template.spec.containers[?(@.name==\"dev-arc-kafkaconsumer\")].image"
         }
       ]
-  name: arc-kafkaconsumer
+  name: dev-arc-kafkaconsumer
   labels:
-    app: arc-kafkaconsumer
-    app.kubernetes.io/component: arc-kafkaconsumer
-    app.kubernetes.io/instance: arc-kafkaconsumer
-    app.kubernetes.io/part-of: arc-dev
+    app: dev-arc-kafkaconsumer
+    app.kubernetes.io/component: dev-arc-kafkaconsumer
+    app.kubernetes.io/instance: dev-arc-kafkaconsumer
+    app.kubernetes.io/part-of: dev-arc
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app.kubernetes.io/part-of: arc-dev
-      deployment: arc-kafkaconsumer
+      app.kubernetes.io/part-of: dev-arc
+      deployment: dev-arc-kafkaconsumer
   template:
     metadata:
       annotations:
         alpha.image.policy.openshift.io/resolve-names: '*'
       labels:
-        app.kubernetes.io/part-of: arc-dev
-        deployment: arc-kafkaconsumer
+        app.kubernetes.io/part-of: dev-arc
+        deployment: dev-arc-kafkaconsumer
     spec:
       containers:
-        - name: arc-kafkaconsumer
-          image: 'arc-kafkaconsumer:latest'
+        - name: dev-arc-kafkaconsumer
+          image: 'dev-arc-kafkaconsumer:latest'
           ports:
             - containerPort: 8080
               protocol: TCP

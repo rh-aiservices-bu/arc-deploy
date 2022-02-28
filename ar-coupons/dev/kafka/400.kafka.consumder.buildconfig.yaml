@@ -2,12 +2,12 @@
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
-  name: arc-kafkaconsumer
+  name: dev-arc-kafkaconsumer
   labels:
-    app: arc-kafkaconsumer
-    app.kubernetes.io/component: arc-kafkaconsumer
-    app.kubernetes.io/instance: arc-kafkaconsumer
-    app.kubernetes.io/part-of: arc-dev
+    app: dev-arc-kafkaconsumer
+    app.kubernetes.io/component: dev-arc-kafkaconsumer
+    app.kubernetes.io/instance: dev-arc-kafkaconsumer
+    app.kubernetes.io/part-of: dev-arc
 spec:
   nodeSelector: null
   postCommit: {}
@@ -27,7 +27,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: 'arc-kafkaconsumer:latest'
+      name: 'dev-arc-kafkaconsumer:latest'
   triggers:
     # - type: GitHub
     #   github:

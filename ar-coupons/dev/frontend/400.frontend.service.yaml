@@ -2,12 +2,12 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: arc-frontend
+  name: dev-arc-frontend
   labels:
-    app: arc-frontend
-    app.kubernetes.io/component: arc-frontend
-    app.kubernetes.io/instance: arc-frontend
-    app.kubernetes.io/part-of: arc-dev
+    app: dev-arc-frontend
+    app.kubernetes.io/component: dev-arc-frontend
+    app.kubernetes.io/instance: dev-arc-frontend
+    app.kubernetes.io/part-of: dev-arc
 spec:
   ipFamilies:
     - IPv4
@@ -21,7 +21,7 @@ spec:
   ipFamilyPolicy: SingleStack
   sessionAffinity: None
   selector:
-    app.kubernetes.io/part-of: arc-dev
-    deployment: arc-frontend
+    app.kubernetes.io/part-of: dev-arc
+    deployment: dev-arc-frontend
 status:
   loadBalancer: {}
