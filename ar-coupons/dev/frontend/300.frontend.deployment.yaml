@@ -50,6 +50,41 @@ spec:
                 configMapKeyRef:
                   name: dev-arc-frontend
                   key: OBJECT_DETECTION_URL
+            - name: KAFKA_TOPIC_OBJECTS
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_TOPIC_OBJECTS
+            - name: KAFKA_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_USERNAME
+            - name: KAFKA_BOOTSTRAP_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_BOOTSTRAP_SERVER
+            - name: KAFKA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_PASSWORD
+            - name: KAFKA_SASL_MECHANISM
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_SASL_MECHANISM
+            - name: KAFKA_SECURITY_PROTOCOL
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_SECURITY_PROTOCOL
+            - name: KAFKA_TOPIC_IMAGES
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_TOPIC_IMAGES
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
