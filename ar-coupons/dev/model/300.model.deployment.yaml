@@ -2,6 +2,7 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
+  name: dev-arc-model
   annotations:
     image.openshift.io/triggers: |-
       [
@@ -13,12 +14,13 @@ metadata:
           "fieldPath":"spec.template.spec.containers[?(@.name==\"dev-arc-model\")].image"
         }
       ]
-  name: dev-arc-model
   labels:
     app: dev-arc-model
     app.kubernetes.io/component: dev-arc-model
     app.kubernetes.io/instance: dev-arc-model
     app.kubernetes.io/part-of: dev-arc
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 2
   selector:
