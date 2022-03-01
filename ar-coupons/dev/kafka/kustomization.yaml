@@ -9,5 +9,6 @@ resources:
   - "202.kafka.topics.objects.yaml"
   - "300.kafka.consumer.imagestream.yaml"
   - "400.kafka.consumder.buildconfig.yaml"
+  - "450.kafka.secret.yaml"
   - "500.kafka.consumer.deployment.yaml"
   - "600.kafka.consumer.service.yaml"
