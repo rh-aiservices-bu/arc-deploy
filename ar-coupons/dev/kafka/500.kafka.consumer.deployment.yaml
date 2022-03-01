@@ -20,7 +20,7 @@ metadata:
     app.kubernetes.io/instance: dev-arc-kafkaconsumer
     app.kubernetes.io/part-of: dev-arc
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/part-of: dev-arc
@@ -43,6 +43,42 @@ spec:
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
+          env:
+            - name: KAFKA_TOPIC_OBJECTS
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_TOPIC_OBJECTS
+            - name: KAFKA_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_USERNAME
+            - name: KAFKA_BOOTSTRAP_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_BOOTSTRAP_SERVER
+            - name: KAFKA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_PASSWORD
+            - name: KAFKA_SASL_MECHANISM
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_SASL_MECHANISM
+            - name: KAFKA_SECURITY_PROTOCOL
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_SECURITY_PROTOCOL
+            - name: KAFKA_TOPIC_IMAGES
+              valueFrom:
+                secretKeyRef:
+                  name: dev-arc-kafka
+                  key: KAFKA_TOPIC_IMAGES
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
