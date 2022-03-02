@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: build-and-deploy
+  name: frontend-pipeline
 spec:
   workspaces:
   - name: shared-workspace
@@ -55,7 +55,7 @@ spec:
     workspaces:
     - name: source
       workspace: shared-workspace
-  - name: git-clone-model
+  - name: git-clone-frontend
     taskRef:
       name: apply-manifests
     workspaces:
@@ -65,46 +65,46 @@ spec:
     # - build-image
     runAfter:
     - start
-  - name: lint-and-syntax-model
+  - name: lint-and-syntax-frontend
     taskRef:
       name: apply-manifests
     workspaces:
     - name: source
       workspace: shared-workspace
     runAfter:
-    - git-clone-model
-  - name: build-model-image
+    - git-clone-frontend
+  - name: build-frontend-image
     taskRef:
       name: apply-manifests
     workspaces:
     - name: source
       workspace: shared-workspace
     runAfter:
-    - lint-and-syntax-model
-  - name: sanity-check-model
+    - lint-and-syntax-frontend
+  - name: sanity-check-frontend
     taskRef:
       name: apply-manifests
     workspaces:
     - name: source
       workspace: shared-workspace
     runAfter:
-    - build-model-image
-  - name: performance-check-model
+    - build-frontend-image
+  - name: performance-check-frontend
     taskRef:
       name: apply-manifests
     workspaces:
     - name: source
       workspace: shared-workspace
     runAfter:
-    - build-model-image
-  - name: security-scan-model
+    - build-frontend-image
+  - name: security-scan-frontend
     taskRef:
       name: apply-manifests
     workspaces:
     - name: source
       workspace: shared-workspace
     runAfter:
-    - build-model-image
+    - build-frontend-image
   - name: trigger-move-to-production
     taskRef:
       name: apply-manifests
@@ -112,9 +112,9 @@ spec:
     - name: source
       workspace: shared-workspace
     runAfter:
-    - security-scan-model
-    - performance-check-model
-    - sanity-check-model
+    - security-scan-frontend
+    - performance-check-frontend
+    - sanity-check-frontend
   - name: update-deployment
     taskRef:
       name: update-deployment
