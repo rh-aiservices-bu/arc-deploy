@@ -1,0 +1,7 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  generateName: test-run-
+spec:
+  taskRef:
+    name: apply-manifests

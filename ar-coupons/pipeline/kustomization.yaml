@@ -6,3 +6,4 @@ resources:
   - 02_update_deployment_task.yaml
   - 03_persistent_volume_claim.yaml
   - 04_pipeline.yaml
+  - 05_taskrun.yaml
