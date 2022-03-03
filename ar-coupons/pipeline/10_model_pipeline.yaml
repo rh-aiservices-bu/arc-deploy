@@ -115,16 +115,16 @@ spec:
     - security-scan-model
     - performance-check-model
     - sanity-check-model
-  - name: update-deployment
-    taskRef:
-      name: update-deployment
-    params:
-    - name: deployment
-      value: $(params.deployment-name)
-    # - name: IMAGE
-    #   value: $(params.IMAGE)
-    runAfter:
-    - start
+  # - name: update-deployment
+  #   taskRef:
+  #     name: update-deployment
+  #   params:
+  #   - name: deployment
+  #     value: $(params.deployment-name)
+  #   # - name: IMAGE
+  #   #   value: $(params.IMAGE)
+  #   runAfter:
+  #   - start
 
 
 
