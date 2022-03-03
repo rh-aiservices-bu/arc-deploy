@@ -173,6 +173,7 @@ metadata:
   name: gogs
 spec:
   to:
+    kind: Service
     name: gogs
 ---
 kind: PersistentVolumeClaim
