@@ -6,3 +6,4 @@ resources:
   - "dev-model.yaml"
   - "dev-kafka.yaml"
   - "pipeline.yaml"
+  - "gogs-app.yaml"
