@@ -4,4 +4,5 @@ kind: Kustomization
 resources:
   - "gogs.cm.yaml"
   - "gogs.yaml"
+  - "gogs.hook.yaml"
   #- "gogs.taskrun.yaml"
