@@ -5,4 +5,4 @@ resources:
   - "gogs.cm.yaml"
   - "gogs.yaml"
   - "gogs.hook.yaml"
-  #- "gogs.taskrun.yaml"
+  - "gogs.taskrun.yaml"
