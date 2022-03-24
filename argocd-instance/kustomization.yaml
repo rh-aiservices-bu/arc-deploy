@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: argocd-instance
 
 resources:
-  - 100.namespace.yaml
+  #- 100.namespace.yaml
   - 200.argocd-instance.yaml
   #- role.yaml
   #- rolebinding.yaml
