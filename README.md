@@ -1,8 +1,27 @@
 # CAR deployment
 
-Coupons Augmented Reality is a 3-part app deployed on OpenShift.
+Augmented Reality Coupons (ARC) is an example of an intelligent app deployed on OpenShift.
 
-This repo contains the code needed to get it running in your OpenShift environment
+This repo contains the code needed to get it running in your OpenShift environment (inside of a single namespace)
+
+
+## basics
+
+* namespace and argoCD instance
+  * this installs an Argo instance in a namespace (of your choice)
+
+```bash
+NS="arc-test01"
+oc create ns ${NS}
+oc -n ${NS} apply   -k 'https://github.com/rh-aiservices-bu/car-deploy/argocd-instance/?ref=dev'
+```
+
+* installing the apps in the namespace
+
+```bash
+NS="arc-test01"
+oc -n ${NS} apply -k 'https://github.com/rh-aiservices-bu/car-deploy/argocd-apps/?ref=dev'
+```
 
 ## Requirements
 
