@@ -21,6 +21,23 @@ oc -n ${NS} apply   -k 'https://github.com/rh-aiservices-bu/car-deploy/argocd-in
 ```bash
 NS="arc-test01"
 oc -n ${NS} apply -k 'https://github.com/rh-aiservices-bu/car-deploy/argocd-apps/?ref=dev'
+oc -n ${NS} get applications
+
+# oc patch configmap rhods-groups-config -n redhat-ods-applications --patch-file "${DIR}/rhods/rhods-groups-config-patch.yaml"
+
+# oc -n ${NS} patch application gogs  --patch "{\"spec\":{\"destination\":{\"namespace\":\"arc-test01\"}}}" --merge
+# oc -n ${NS} patch application gogs  \
+#    --type='json' \
+#    -p='[{"op": "replace", "path": "/spec/destination/namespace", "value":"arc-test01"}]'
+
+for app in $(oc -n ${NS} get applications --no-headers |  awk '{ print $1 }') ; do
+   echo "patching ${app}"
+   oc -n ${NS} patch application ${app}  \
+   --type='json' \
+   -p="[{'op': 'replace', 'path': '/spec/destination/namespace', 'value':'${NS}'}]"
+done
+
+
 ```
 
 ## Requirements
