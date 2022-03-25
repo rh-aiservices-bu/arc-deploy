@@ -2,10 +2,10 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: dev-model
-  namespace: arc-test01
+  # namespace: arc-test01
 spec:
   destination:
-    namespace: arc-test01
+    # namespace: arc-test01
     server: https://kubernetes.default.svc
   project: default
   source:

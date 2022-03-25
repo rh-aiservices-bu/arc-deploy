@@ -109,6 +109,7 @@ spec:
       - name: gogs
         imagePullPolicy: Always
         image: quay.io/siamaksade/gogs:stable
+        #image: docker.io/gogs/gogs:0.12
         ports:
         - containerPort: 3000
           protocol: TCP
