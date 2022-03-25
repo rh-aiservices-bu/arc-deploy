@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: gogs
-  namespace: argocd-instance
+  namespace: arc-test01
 spec:
   project: default
   source:
@@ -13,7 +13,7 @@ spec:
       # I believe I came across a bug then the line below is true
       recurse: false
   destination:
-    namespace: argocd-instance
+    namespace: arc-test01
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:

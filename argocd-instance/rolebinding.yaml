@@ -10,4 +10,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: argocd-instance-argocd-application-controller
-  namespace: argocd-instance
+  namespace: arc-test01
