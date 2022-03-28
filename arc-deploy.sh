@@ -61,7 +61,7 @@ fi
 # ## Argocd Instance
 printf "Deploy private instance of ArgoCD\n"
 oc -n $ARC_PROJ apply \
-    -k "${GIT_ORG}/arc-deploy/argocd-instance/?ref=${GIT_REF}"
+    -k "${GIT_ORG}/arc-deploy/argocd-instance/?ref=${GIT_REF}" | sed 's/^/    /'
 
 printf "wait for argocd route\n"
 timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get routes \
@@ -70,14 +70,15 @@ timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get routes \
 function deploy_and_patch () {
     printf "Deploy the apps\n"
     oc -n ${ARC_PROJ} apply \
-        -k "${GIT_ORG}/car-deploy/argocd-apps/?ref=${GIT_REF}"
+        -k "${GIT_ORG}/car-deploy/argocd-apps/?ref=${GIT_REF}" | sed 's/^/    /'
 
     printf "Patch them to add the namespace\n"
     for app in $(oc -n ${ARC_PROJ} get applications --no-headers |  awk '{ print $1 }') ; do
-       echo "patching ${app}"
+       printf "    patching ${app}\n"
        oc -n ${ARC_PROJ} patch application ${app}  \
        --type='json' \
-       -p="[{'op': 'replace', 'path': '/spec/destination/namespace', 'value':'$ARC_PROJ'}]"
+       -p="[{'op': 'replace', 'path': '/spec/destination/namespace', 'value':'$ARC_PROJ'}]" \
+       | sed 's/^/    /'
     done
 }
 
@@ -119,7 +120,7 @@ done
 printf "\n"
 
 printf "Waiting (up to 10 minutes) for all apps to be done syncing\n"
-timeout 300s bash -c -- "while oc -n ${ARC_PROJ} get applications \
-    | grep -E 'Progressing|Unkno'  > /dev/null 2>&1; do printf '.' ; sleep 5 ;done"
+timeout 3s bash -c -- "while oc -n ${ARC_PROJ} get applications \
+    | grep -E 'Progressing|Unknown|Missing|OutOfSync'  > /dev/null 2>&1; do printf '.' ; sleep 5 ;done"
 
 printf "\n"
