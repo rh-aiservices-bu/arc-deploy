@@ -1,0 +1,29 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dev-arc-model
+  labels:
+    app: dev-arc-model
+    app.kubernetes.io/component: dev-arc-model
+    app.kubernetes.io/instance: dev-arc-model
+    app.kubernetes.io/part-of: dev-arc
+  # annotations:
+  #   argocd.argoproj.io/sync-wave: "3"
+spec:
+  ipFamilies:
+    - IPv4
+  ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  ipFamilyPolicy: SingleStack
+  sessionAffinity: None
+  selector:
+    app.kubernetes.io/part-of: dev-arc
+    deployment: dev-arc-model
+status:
+  loadBalancer: {}

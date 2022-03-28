@@ -1,14 +1,14 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: objects
+  name: images
   labels:
-    strimzi.io/cluster: car
-    app: car-kafka
-    app.kubernetes.io/part-of: car
+    strimzi.io/cluster: dev-arc-kafka
+    app: dev-arc-kafka
+    app.kubernetes.io/part-of: dev-arc
 spec:
   partitions: 1
   replicas: 1
-  topicName: objects
+  topicName: images
   config:
     retention.ms: 7200000

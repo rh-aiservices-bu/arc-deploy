@@ -1,0 +1,13 @@
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: dev-arc-model
+  labels:
+    app.kubernetes.io/name: dev-arc-model
+    app.kubernetes.io/part-of: dev-arc
+  # annotations:
+  #   argocd.argoproj.io/sync-wave: "1"
+spec:
+  lookupPolicy:
+    local: true

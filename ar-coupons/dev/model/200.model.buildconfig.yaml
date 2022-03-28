@@ -1,0 +1,37 @@
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: dev-arc-model
+  labels:
+    app: dev-arc-model
+    app.kubernetes.io/component: dev-arc-model
+    app.kubernetes.io/instance: dev-arc-model
+    app.kubernetes.io/part-of: dev-arc
+  # annotations:
+  #   argocd.argoproj.io/sync-wave: "2"
+spec:
+  nodeSelector: null
+  postCommit: {}
+  resources: {}
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        namespace: openshift
+        name: 'python:3.8-ubi8'
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/rh-aiservices-bu/arc-rest'
+      ref: dev
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'dev-arc-model:latest'
+  triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChange: {}
+  runPolicy: Serial

@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - 01_apply_manifest_task.yaml
+  - 02_update_deployment_task.yaml
+  # - 03_persistent_volume_claim.yaml
+  - 10_model_pipeline.yaml
+  - 11_frontend_pipeline.yaml
+  - 05_taskrun.yaml

@@ -2,10 +2,10 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
-  name: car
+  name: arc
   labels:
-    app: car-kafka
-    app.kubernetes.io/part-of: car
+    app: arc-kafka
+    app.kubernetes.io/part-of: arc
 spec:
   kafka:
     replicas: 1

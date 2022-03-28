@@ -1,0 +1,14 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: objects
+  labels:
+    strimzi.io/cluster: dev-arc-kafka
+    app: dev-arc-kafka
+    app.kubernetes.io/part-of: dev-arc
+spec:
+  partitions: 1
+  replicas: 1
+  topicName: objects
+  config:
+    retention.ms: 7200000

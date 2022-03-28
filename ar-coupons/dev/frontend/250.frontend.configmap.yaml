@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dev-arc-frontend
+  labels:
+    app: dev-arc-frontend
+    app.kubernetes.io/component: dev-arc-frontend
+    app.kubernetes.io/instance: dev-arc-frontend
+    app.kubernetes.io/part-of: dev-arc
+data:
+  OBJECT_DETECTION_URL: "http://dev-arc-model:8080/predictions"

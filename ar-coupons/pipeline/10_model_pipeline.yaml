@@ -1,0 +1,142 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: model-pipeline
+spec:
+  workspaces:
+  - name: shared-workspace
+  params:
+  - name: deployment-name
+    type: string
+    description: name of the deployment to be patched
+    default: "k8s"
+  # - name: git-url
+  #   type: string
+  #   description: url of the git repo for the code of deployment
+  # - name: git-revision
+  #   type: string
+  #   description: revision to be used from repo of the code for deployment
+  #   default: "master"
+  # - name: IMAGE
+  #   type: string
+  #   description: image to be build from the code
+  tasks:
+  # - name: fetch-repository
+  #   taskRef:
+  #     name: git-clone
+  #     kind: ClusterTask
+  #   workspaces:
+  #   - name: output
+  #     workspace: shared-workspace
+  #   params:
+  #   - name: url
+  #     value: $(params.git-url)
+  #   - name: subdirectory
+  #     value: ""
+  #   - name: deleteExisting
+  #     value: "true"
+  #   - name: revision
+  #     value: $(params.git-revision)
+  # - name: build-image
+  #   taskRef:
+  #     name: buildah
+  #     kind: ClusterTask
+  #   params:
+  #   - name: IMAGE
+  #     value: $(params.IMAGE)
+  #   workspaces:
+  #   - name: source
+  #     workspace: shared-workspace
+  #   runAfter:
+  #   - fetch-repository
+  - name: start
+    taskRef:
+      name: apply-manifests
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+  - name: git-clone-model
+    taskRef:
+      name: apply-manifests
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    # runAfter:
+    # - build-image
+    runAfter:
+    - start
+  - name: lint-and-syntax-model
+    taskRef:
+      name: apply-manifests
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    runAfter:
+    - git-clone-model
+  - name: build-model-image
+    taskRef:
+      name: apply-manifests
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    runAfter:
+    - lint-and-syntax-model
+  - name: sanity-check-model
+    taskRef:
+      name: apply-manifests
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    runAfter:
+    - build-model-image
+  - name: performance-check-model
+    taskRef:
+      name: apply-manifests
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    runAfter:
+    - build-model-image
+  - name: security-scan-model
+    taskRef:
+      name: apply-manifests
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    runAfter:
+    - build-model-image
+  - name: trigger-move-to-production
+    taskRef:
+      name: apply-manifests
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    runAfter:
+    - security-scan-model
+    - performance-check-model
+    - sanity-check-model
+  # - name: update-deployment
+  #   taskRef:
+  #     name: update-deployment
+  #   params:
+  #   - name: deployment
+  #     value: $(params.deployment-name)
+  #   # - name: IMAGE
+  #   #   value: $(params.IMAGE)
+  #   runAfter:
+  #   - start
+
+
+
+
+
+# git clone models
+#   lint+syntax-check models
+#     build model image
+#        sanity-check model image (basic test)
+#        performance test model image (less than x ms)
+#        security-scan test model image (less than x ms)
+# syntax check yaml pieces
+# syntax check python pieces
+# trigger
+

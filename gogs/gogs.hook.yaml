@@ -1,0 +1,57 @@
+---
+# apiVersion: triggers.tekton.dev/v1alpha1
+# kind: EventListener
+# metadata:
+#   name: webhook
+# spec:
+#   serviceAccountName: pipeline
+#   triggers:
+#     - name: petclinic-webhook
+#       interceptors:
+#         - cel:
+#             overlays:
+#             - key: short_sha
+#               expression: "body.after.truncate(7)"
+#             - key: branch_name
+#               expression: "body.ref.split('/')[2]"
+#       bindings:
+#         - ref: gogs-triggerbinding
+#       template:
+#         name: petclinic-trigger-template
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: webhook
+  labels:
+    app.kubernetes.io/managed-by: EventListener
+    app.kubernetes.io/part-of: Triggers
+    eventlistener: webhook
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  port:
+    targetPort: 8080
+  to:
+    kind: "Service"
+    name: el-webhook
+    weight: 100
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: gogs-triggerbinding
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  params:
+  - name: gitrevision
+    value: $(body.after)
+  - name: gitshortsha
+    value: $(body.short_sha)
+  - name: gitbranchname
+    value: $(body.branch_name)
+  - name: gitrepositoryurl
+    value: $(body.repository.clone_url)
+  - name: contenttype
+    value: $(header.Content-Type)

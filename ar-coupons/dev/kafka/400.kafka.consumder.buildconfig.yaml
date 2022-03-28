@@ -1,0 +1,41 @@
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: dev-arc-kafkaconsumer
+  labels:
+    app: dev-arc-kafkaconsumer
+    app.kubernetes.io/component: dev-arc-kafkaconsumer
+    app.kubernetes.io/instance: dev-arc-kafkaconsumer
+    app.kubernetes.io/part-of: dev-arc
+spec:
+  nodeSelector: null
+  postCommit: {}
+  resources: {}
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        namespace: openshift
+        name: 'python:3.8-ubi8'
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/rh-aiservices-bu/arc-kafka'
+      ref: dev
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'dev-arc-kafkaconsumer:latest'
+  triggers:
+    # - type: GitHub
+    #   github:
+    #     secret: oV6VYLRRGcP8WvrCpet0
+    # - type: Generic
+    #   generic:
+    #     secret: tsQn1wkx5n8POz-2k2td
+    - type: ConfigChange
+    - type: ImageChange
+      imageChange: {}
+  runPolicy: Serial

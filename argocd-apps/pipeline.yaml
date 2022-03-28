@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pipeline
+  # namespace: arc-test01
+spec:
+  destination:
+    # namespace: arc-test01
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    directory:
+      # I believe I came across a bug then the line below is true
+      recurse: false
+    path: ar-coupons/pipeline
+    # repoURL: https://github.com/rh-aiservices-bu/arc-deploy.git
+    repoURL: http://gogs:3000/gogs/arc-deploy.git
+    targetRevision: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      backoff:
+        duration: 5s
+        factor: 1
+        maxDuration: 10m
+      limit: 120
+  # ignoreDifferences:
+  # - group: apps
+  #   kind: Deployment
+  #   jsonPointers:
+  #     - /spec/template/spec/containers/0/image
