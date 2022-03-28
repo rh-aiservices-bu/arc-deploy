@@ -17,8 +17,10 @@ data:
     [repository]
     ROOT = /opt/gogs/data/repositories
     [server]
-    ROOT_URL=http://@HOSTNAME
-    SSH_DOMAIN=@HOSTNAME
+    ROOT_URL=http://gogs:3000
+    SSH_DOMAIN=@gogs:2222
+    # ROOT_URL=http://@HOSTNAME
+    # SSH_DOMAIN=@HOSTNAME
     [security]
     INSTALL_LOCK = true
     [service]
