@@ -14,7 +14,7 @@ spec:
       recurse: false
     path: ar-coupons/dev/kafka
     # repoURL: https://github.com/rh-aiservices-bu/car-deploy.git
-    repoURL: http://gogs/gogs/car-deploy.git
+    repoURL: http://gogs:3000/gogs/car-deploy.git
     targetRevision: dev
   syncPolicy:
     automated:
