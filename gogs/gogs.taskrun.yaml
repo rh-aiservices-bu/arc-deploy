@@ -32,6 +32,7 @@ spec:
           #webhookURL = "http://" + os.popen('oc get route webhook -o template --template="{{.spec.host}}"').read()
           gogsURL = "http://" + os.popen('oc -n ${NAMESPACE} get svc gogs -o template --template="{{.spec.clusterIP}}"').read() + ":3000"
           print(gogsURL)
+          requests.get(gogsURL, timeout=60)
           #
           # create admin user
           data_user = {
