@@ -10,7 +10,7 @@ spec:
   rbac:
     defaultPolicy: 'role:readonly'
     policy: |
-      g, argo-users, role:admin
+      g, system:authenticated, role:admin
     scopes: '[groups]'
   server:
     insecure: true
