@@ -42,7 +42,7 @@ if [[ "${ARC_PROJ}" == *"openshift"* ]]; then
 fi
 
 
-if oc get project | grep ${ARC_PROJ} ; then
+if oc get project | grep ${ARC_PROJ} > /dev/null 2>&1; then
     printf "Project ${ARC_PROJ} already exists\n"
 else
     printf "Project ${ARC_PROJ} does not exist\n"
@@ -83,9 +83,10 @@ function deploy_and_patch () {
 
 deploy_and_patch
 
-url=$(oc -n ${ARC_PROJ} describe route | grep 'argocd-instance' | grep Host | awk '{ print $3 }' )
-printf "This is the URL of your ArgoCD instance\n"
-printf "    https://$url/\n\n"
+argo_url=$(oc -n ${ARC_PROJ} describe route | grep 'argocd-instance' | grep Host | awk '{ print $3 }' )
+printf "\n\nThis is the URL of your ArgoCD instance\n"
+printf "    https://${argo_url}/\n\n"
+printf "You can open it in your browser to watch the progress of your apps.\n\n"
 
 
 printf "Waiting (up to 10 minutes) for gogs to deploy fully\n"
@@ -93,21 +94,32 @@ timeout 600s bash -c -- "until oc -n ${ARC_PROJ} get pods \
     | grep 'gogs-initialize' \
     | grep  'Completed'  > /dev/null 2>&1; do printf '.' ; sleep 1 ;done"
 
-#deploy_and_patch
+deploy_and_patch
 
 # timeout 30s bash -c -- "while oc -n ${ARC_PROJ} get applications \
 #     | grep  Unknown  > /dev/null 2>&1; do oc -n ${ARC_PROJ} get applications ; sleep 5 ;done"
 
-url=$(oc -n ${ARC_PROJ} describe route | grep 'gogs' | grep Host | awk '{ print $3 }' )
+gog_url=$(oc -n ${ARC_PROJ} describe route | grep 'gogs' | grep Host | awk '{ print $3 }' )
  #printf "https://$(oc -n \${ARC_PROJ} describe route | grep Host | awk '{ print $3 }')/\n\n"
-printf "This is the URL of your gogs instance\n"
-printf "    https://$url/\n"
-printf "    User:     gogs \n    Password: gogs\n"
+printf "\n\nThis is the URL of your gogs instance\n"
+printf "    https://${gogs_url}/\n"
+printf "    User:     gogs \n    Password: gogs\n\n"
+printf "This is the URL of your ArgoCD instance\n"
+printf "    https://${argo_url}/\n\n"
 
-printf "URLs:\n"
-for host in $(oc -n ${ARC_PROJ} describe route |  grep Host | awk '{ print $3 }') ; do
+
+printf "Other URLs:\n"
+for host in $(oc -n ${ARC_PROJ} describe route \
+    | grep -E 'frontend|model' \
+    |  grep Host \
+    | awk '{ print $3 }') ; do
    #echo " ${host}"
     printf "   -  https://"${host}"/\n"
 done
+printf "\n"
 
+printf "Waiting (up to 10 minutes) for all apps to be done syncing\n"
+timeout 300s bash -c -- "while oc -n ${ARC_PROJ} get applications \
+    | grep -E 'Progressing|Unkno'  > /dev/null 2>&1; do printf '.' ; sleep 5 ;done"
 
+printf "\n"
