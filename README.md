@@ -14,9 +14,10 @@ This repo contains the code needed to get it running in your OpenShift environme
 oc new-project arc-main
 oc new-project arc-dev
 
-export GIT_REF=dev
+export GIT_REF=main
+bash arc-deploy.sh arc-main
 
-bash arc-deploy.sh arc-main &
-bash arc-deploy.sh arc-dev &
+export GIT_REF=dev
+bash arc-deploy.sh arc-dev
 
 ```
