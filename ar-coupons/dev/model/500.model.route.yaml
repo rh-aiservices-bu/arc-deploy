@@ -7,8 +7,8 @@ metadata:
     app.kubernetes.io/component: dev-arc-model
     app.kubernetes.io/instance: dev-arc-model
     app.kubernetes.io/part-of: dev-arc
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
+  # annotations:
+  #   argocd.argoproj.io/sync-wave: "3"
 spec:
   port:
     targetPort: 8080-tcp
