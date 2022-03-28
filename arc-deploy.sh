@@ -70,7 +70,7 @@ timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get routes \
 function deploy_and_patch () {
     printf "Deploy the apps\n"
     oc -n ${ARC_PROJ} apply \
-        -k "${GIT_ORG}/car-deploy/argocd-apps/?ref=${GIT_REF}" | sed 's/^/    /'
+        -k "${GIT_ORG}/arc-deploy/argocd-apps/?ref=${GIT_REF}" | sed 's/^/    /'
 
     printf "Patch them to add the namespace\n"
     for app in $(oc -n ${ARC_PROJ} get applications --no-headers |  awk '{ print $1 }') ; do
