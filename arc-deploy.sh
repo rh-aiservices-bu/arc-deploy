@@ -54,7 +54,7 @@ else
         printf "Creation successful\n"
     else
         printf "Creation failed\n"
-        exit 1
+        exit
     fi
 fi
 
@@ -67,18 +67,21 @@ printf "wait for argocd route\n"
 timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get routes \
     | grep  'argocd-instance'  > /dev/null 2>&1; do printf '.' ; sleep 1 ;done"
 
+function deploy_and_patch () {
+    printf "Deploy the apps\n"
+    oc -n ${ARC_PROJ} apply \
+        -k "${GIT_ORG}/car-deploy/argocd-apps/?ref=dev"
 
-printf "Deploy the apps\n"
-oc -n ${ARC_PROJ} apply \
-    -k "${GIT_ORG}/car-deploy/argocd-apps/?ref=dev"
+    printf "Patch them to add the namespace\n"
+    for app in $(oc -n ${ARC_PROJ} get applications --no-headers |  awk '{ print $1 }') ; do
+       echo "patching ${app}"
+       oc -n ${ARC_PROJ} patch application ${app}  \
+       --type='json' \
+       -p="[{'op': 'replace', 'path': '/spec/destination/namespace', 'value':'$ARC_PROJ'}]"
+    done
+}
 
-printf "Patch them to add the namespace\n"
-for app in $(oc -n ${ARC_PROJ} get applications --no-headers |  awk '{ print $1 }') ; do
-   echo "patching ${app}"
-   oc -n ${ARC_PROJ} patch application ${app}  \
-   --type='json' \
-   -p="[{'op': 'replace', 'path': '/spec/destination/namespace', 'value':'$1'}]"
-done
+deploy_and_patch
 
 url=$(oc -n ${ARC_PROJ} describe route | grep 'argocd-instance' | grep Host | awk '{ print $3 }' )
 printf "This is the URL of your ArgoCD instance\n"
@@ -90,6 +93,7 @@ timeout 600s bash -c -- "until oc -n ${ARC_PROJ} get pods \
     | grep 'gogs-initialize' \
     | grep  'Completed'  > /dev/null 2>&1; do printf '.' ; sleep 1 ;done"
 
+deploy_and_patch
 
 # timeout 30s bash -c -- "while oc -n ${ARC_PROJ} get applications \
 #     | grep  Unknown  > /dev/null 2>&1; do oc -n ${ARC_PROJ} get applications ; sleep 5 ;done"
