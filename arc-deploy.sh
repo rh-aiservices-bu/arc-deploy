@@ -1,0 +1,109 @@
+#!/bin/bash
+
+
+if oc cluster-info > /dev/null 2>&1 ; then
+    # executes this block of code,
+    # if some_command would result in:  $? -eq 0
+    printf "Connected to an OpenShift Cluster successfully:\n"
+    # printf "        "
+    oc cluster-info | sed 's/^/    /' | grep running
+    printf "Versions:\n"
+    oc version | sed 's/^/    /'
+else
+    # executes this block of code,
+    # if some_command would result in:  $? -ne 0
+    printf "The command 'oc cluster-info' does not seem to work. Please fix.\n"
+    oc cluster-info
+    exit
+fi
+
+GIT_ORG="${GIT_ORG:-"https://github.com/rh-aiservices-bu"}"
+GIT_PREFIX="${GIT_PREFIX:-"${GIT_ORG}/arc-"}"
+# GIT_REF="${GIT_REF:-"main"}"
+
+# #APP_GIT_REPO="${APP_GIT_REPO:-"${GIT_PREFIX}app#dev"}"
+# APP_GIT_REPO="${APP_GIT_REPO:-"${GIT_PREFIX}app#${GIT_REF}"}"
+# REST_GIT_REPO="${REST_GIT_REPO:-"${GIT_PREFIX}rest#${GIT_REF}"}"
+# KAFKA_GIT_REPO="${KAFKA_GIT_REPO:-"${GIT_PREFIX}kafka#${GIT_REF}"}"
+
+ARC_PROJ="${1:-"not-a-project"}"
+# echo ${ARC_PROJ}
+
+if [[ "${ARC_PROJ}" = "not-a-project" ]]; then
+    printf "You did not specify a project.\n"
+    printf "Execute the script like such:\n"
+    printf "    bash arc-deploy.sh <project_name>\n\n"
+    exit
+fi
+
+if [[ "${ARC_PROJ}" == *"openshift"* ]]; then
+    printf "Your project can not have 'openshift' as part of its name\n"
+    exit
+fi
+
+
+if oc get project | grep ${ARC_PROJ} ; then
+    printf "Project ${ARC_PROJ} already exists\n"
+else
+    printf "Project ${ARC_PROJ} does not exist\n"
+    printf "Creating it:\n"
+    oc new-project ${ARC_PROJ}
+
+    if [ $? -eq 0 ]
+    then
+        printf "Creation successful\n"
+    else
+        printf "Creation failed\n"
+        exit 1
+    fi
+fi
+
+# ## Argocd Instance
+printf "Deploy private instance of ArgoCD\n"
+oc -n $ARC_PROJ apply \
+    -k "${GIT_ORG}/arc-deploy/argocd-instance/?ref=dev"
+
+printf "wait for argocd route\n"
+timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get routes \
+    | grep  'argocd-instance'  > /dev/null 2>&1; do printf '.' ; sleep 1 ;done"
+
+
+printf "Deploy the apps\n"
+oc -n ${ARC_PROJ} apply \
+    -k "${GIT_ORG}/car-deploy/argocd-apps/?ref=dev"
+
+printf "Patch them to add the namespace\n"
+for app in $(oc -n ${ARC_PROJ} get applications --no-headers |  awk '{ print $1 }') ; do
+   echo "patching ${app}"
+   oc -n ${ARC_PROJ} patch application ${app}  \
+   --type='json' \
+   -p="[{'op': 'replace', 'path': '/spec/destination/namespace', 'value':'$1'}]"
+done
+
+url=$(oc -n ${ARC_PROJ} describe route | grep 'argocd-instance' | grep Host | awk '{ print $3 }' )
+printf "This is the URL of your ArgoCD instance\n"
+printf "    https://$url/\n\n"
+
+
+printf "Waiting (up to 10 minutes) for gogs to deploy fully\n"
+timeout 600s bash -c -- "until oc -n ${ARC_PROJ} get pods \
+    | grep 'gogs-initialize' \
+    | grep  'Completed'  > /dev/null 2>&1; do printf '.' ; sleep 1 ;done"
+
+
+# timeout 30s bash -c -- "while oc -n ${ARC_PROJ} get applications \
+#     | grep  Unknown  > /dev/null 2>&1; do oc -n ${ARC_PROJ} get applications ; sleep 5 ;done"
+
+url=$(oc -n ${ARC_PROJ} describe route | grep 'gogs' | grep Host | awk '{ print $3 }' )
+ #printf "https://$(oc -n \${ARC_PROJ} describe route | grep Host | awk '{ print $3 }')/\n\n"
+printf "This is the URL of your gogs instance\n"
+printf "    https://$url/\n"
+printf "    User:     gogs \n    Password: gogs\n"
+
+printf "URLs:\n"
+for host in $(oc -n ${ARC_PROJ} describe route |  grep Host | awk '{ print $3 }') ; do
+   #echo " ${host}"
+    printf "   -  https://"${host}"/\n"
+done
+
+
