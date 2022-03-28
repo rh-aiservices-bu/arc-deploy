@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/rh-aiservices-bu/car-deploy.git
+    repoURL: https://github.com/rh-aiservices-bu/arc-deploy.git
     targetRevision: dev
     path: gogs
     directory:

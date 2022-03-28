@@ -3,9 +3,9 @@ kind: KafkaTopic
 metadata:
   name: images
   labels:
-    strimzi.io/cluster: car
-    app: car-kafka
-    app.kubernetes.io/part-of: car
+    strimzi.io/cluster: arc
+    app: arc-kafka
+    app.kubernetes.io/part-of: arc
 spec:
   partitions: 1
   replicas: 1

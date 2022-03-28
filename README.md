@@ -1,4 +1,4 @@
-# CAR deployment
+# arc deployment
 
 Augmented Reality Coupons (ARC) is an example of an intelligent app deployed on OpenShift.
 
@@ -11,16 +11,16 @@ This repo contains the code needed to get it running in your OpenShift environme
   * this installs an Argo instance in a namespace (of your choice)
 
 ```bash
-NS="arc-test01"
-oc create ns ${NS}
-oc -n ${NS} apply   -k 'https://github.com/rh-aiservices-bu/car-deploy/argocd-instance/?ref=dev'
+NS="arc-test02"
+#oc create ns ${NS}
+oc -n ${NS} apply   -k 'https://github.com/rh-aiservices-bu/arc-deploy/argocd-instance/?ref=dev'
 ```
 
 * installing the apps in the namespace
 
 ```bash
-NS="arc-test01"
-oc -n ${NS} apply -k 'https://github.com/rh-aiservices-bu/car-deploy/argocd-apps/?ref=dev'
+NS="arc-test02"
+oc -n ${NS} apply -k 'https://github.com/rh-aiservices-bu/arc-deploy/argocd-apps/?ref=dev'
 oc -n ${NS} get applications
 
 # oc patch configmap rhods-groups-config -n redhat-ods-applications --patch-file "${DIR}/rhods/rhods-groups-config-patch.yaml"
@@ -37,8 +37,13 @@ for app in $(oc -n ${NS} get applications --no-headers |  awk '{ print $1 }') ; 
    -p="[{'op': 'replace', 'path': '/spec/destination/namespace', 'value':'${NS}'}]"
 done
 
-
 ```
+
+```bash
+NS="arc-test02"
+oc -n ${NS} delete -k 'https://github.com/rh-aiservices-bu/arc-deploy/argocd-apps/?ref=dev'
+```
+
 
 ## Requirements
 
@@ -52,7 +57,7 @@ done
 
 ```
 GIT_ORG="https://github.com/rh-aiservices-bu"
-GIT_PREFIX="${GIT_ORG}/car-"
+GIT_PREFIX="${GIT_ORG}/arc-"
 GIT_REF="main"
 APP_GIT_REPO="${GIT_PREFIX}app#{GIT_REF}"
 REST_GIT_REPO="${GIT_PREFIX}rest#{GIT_REF}"
@@ -62,8 +67,8 @@ KAFKA_GIT_REPO="${GIT_PREFIX}kafka#{GIT_REF}"
 ## Variables with defaults
 
 ```
-OBJECT_DETECTION_URL=http://car-rest:8080/predictions
-KAFKA_BOOTSTRAP_SERVER=car-kafka-bootstrap:9092
+OBJECT_DETECTION_URL=http://arc-rest:8080/predictions
+KAFKA_BOOTSTRAP_SERVER=arc-kafka-bootstrap:9092
 ```
 
 
@@ -86,9 +91,9 @@ Inputs:
 
 
 
-URL1=$(oc -n globex-car-dev describe bc/car-app  | grep -o 'https.*github$')
+URL1=$(oc -n globex-arc-dev describe bc/arc-app  | grep -o 'https.*github$')
 echo $URL1
-gh_secret=$(oc -n globex-car-dev get bc/car-app -o=jsonpath='{.spec.triggers..github.secret}')
+gh_secret=$(oc -n globex-arc-dev get bc/arc-app -o=jsonpath='{.spec.triggers..github.secret}')
 echo $gh_secret
 
 echo "${URL1}" | sed "s/<secret>/${gh_secret}/g"

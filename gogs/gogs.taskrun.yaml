@@ -63,8 +63,8 @@ spec:
           else:
             print("Created admin user {}:{}".format(gogs_user, gogs_pwd))
           #
-          # create git repo car-deploy
-          data_repo = '{"clone_addr": "https://github.com/rh-aiservices-bu/car-deploy", "uid": 1, "repo_name": "arc-deploy"}'
+          # create git repo arc-deploy
+          data_repo = '{"clone_addr": "https://github.com/rh-aiservices-bu/arc-deploy", "uid": 1, "repo_name": "arc-deploy"}'
           headers = {'Content-Type': 'application/json'}
           resp = requests.post(url = gogsURL + "/api/v1/repos/migrate", headers = headers, auth = (gogs_user, gogs_pwd), data = data_repo)
           if resp.status_code != 200 and resp.status_code != 201:
@@ -75,8 +75,8 @@ spec:
             print("Created git repo arc-deploy")
           #
           #
-          # create git repo car-rest
-          data_repo = '{"clone_addr": "https://github.com/rh-aiservices-bu/car-rest", "uid": 1, "repo_name": "arc-model"}'
+          # create git repo arc-rest
+          data_repo = '{"clone_addr": "https://github.com/rh-aiservices-bu/arc-rest", "uid": 1, "repo_name": "arc-model"}'
           headers = {'Content-Type': 'application/json'}
           resp = requests.post(url = gogsURL + "/api/v1/repos/migrate", headers = headers, auth = (gogs_user, gogs_pwd), data = data_repo)
           if resp.status_code != 200 and resp.status_code != 201:
@@ -87,8 +87,8 @@ spec:
             print("Created git repo arc-rest")
           #
           #
-          # create git repo car-deploy
-          data_repo = '{"clone_addr": "https://github.com/rh-aiservices-bu/car-app", "uid": 1, "repo_name": "arc-frontend"}'
+          # create git repo arc-deploy
+          data_repo = '{"clone_addr": "https://github.com/rh-aiservices-bu/arc-app", "uid": 1, "repo_name": "arc-frontend"}'
           headers = {'Content-Type': 'application/json'}
           resp = requests.post(url = gogsURL + "/api/v1/repos/migrate", headers = headers, auth = (gogs_user, gogs_pwd), data = data_repo)
           if resp.status_code != 200 and resp.status_code != 201:
@@ -99,8 +99,8 @@ spec:
             print("Created git repo arc-frontend")
           #
           #
-          # create git repo car-deploy
-          data_repo = '{"clone_addr": "https://github.com/rh-aiservices-bu/car-kafka", "uid": 1, "repo_name": "arc-kafka"}'
+          # create git repo arc-deploy
+          data_repo = '{"clone_addr": "https://github.com/rh-aiservices-bu/arc-kafka", "uid": 1, "repo_name": "arc-kafka"}'
           headers = {'Content-Type': 'application/json'}
           resp = requests.post(url = gogsURL + "/api/v1/repos/migrate", headers = headers, auth = (gogs_user, gogs_pwd), data = data_repo)
           if resp.status_code != 200 and resp.status_code != 201:
@@ -110,7 +110,7 @@ spec:
           else:
             print("Created git repo arc-kafka")
           #
-          # configure webhook on car-deploy
+          # configure webhook on arc-deploy
           #          data_webhook = '{"type": "gogs", "config": { "url": "' + webhookURL + '", "content_type": "json"}, "events": ["push"], "active": true}'
           #          headers = {'Content-Type': 'application/json'}
           #          resp = requests.post(url = gogsURL + "/api/v1/repos/" + gogs_user + "/spring-petclinic/hooks",
@@ -122,7 +122,7 @@ spec:
           #            print(resp.content)
           #          else:
           #            print("Configured webhook: " + webhookURL)
-          # create git repo car-rest
+          # create git repo arc-rest
           #          data_repo = '{"clone_addr": "https://github.com/siamaksade/spring-petclinic-config.git", "uid": 1, "repo_name": "spring-petclinic-config"}'
           #          headers = {'Content-Type': 'application/json'}
           #          resp = requests.post(url = gogsURL + "/api/v1/repos/migrate", headers = headers, auth = (gogs_user, gogs_pwd), data = data_repo)

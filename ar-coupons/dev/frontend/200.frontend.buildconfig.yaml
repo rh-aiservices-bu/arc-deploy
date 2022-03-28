@@ -22,7 +22,7 @@ spec:
   source:
     type: Git
     git:
-      uri: 'https://github.com/rh-aiservices-bu/car-app'
+      uri: 'https://github.com/rh-aiservices-bu/arc-app'
       ref: dev
   output:
     to:

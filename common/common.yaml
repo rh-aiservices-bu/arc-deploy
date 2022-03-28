@@ -3,10 +3,10 @@ apiVersion: template.openshift.io/v1
 kind: Template
 
 labels:
-  application: car-common
+  application: arc-common
 
 metadata:
-  name: car-common
+  name: arc-common
 
 parameters:
   - name: KAFKA_BOOTSTRAP_SERVER
@@ -17,18 +17,18 @@ parameters:
   - name: KAFKA_TOPIC_IMAGES
   - name: KAFKA_TOPIC_OBJECTS
   - name: OBJECT_DETECTION_URL
-    value: "http://car-rest:8080/predictions"
+    value: "http://arc-rest:8080/predictions"
 
 objects:
   - apiVersion: v1
     kind: Secret
     metadata:
-      name: car-kafka
+      name: arc-kafka
       labels:
-        app: car-common
-        app.kubernetes.io/component: car-common
-        app.kubernetes.io/instance: car-common
-        app.kubernetes.io/part-of: car
+        app: arc-common
+        app.kubernetes.io/component: arc-common
+        app.kubernetes.io/instance: arc-common
+        app.kubernetes.io/part-of: arc
     data:
     stringData:
       KAFKA_BOOTSTRAP_SERVER: ${KAFKA_BOOTSTRAP_SERVER}
@@ -42,12 +42,12 @@ objects:
   - apiVersion: v1
     kind: ConfigMap
     metadata:
-      name: car-rest
+      name: arc-rest
       labels:
-        app: car-common
-        app.kubernetes.io/component: car-common
-        app.kubernetes.io/instance: car-common
-        app.kubernetes.io/part-of: car
+        app: arc-common
+        app.kubernetes.io/component: arc-common
+        app.kubernetes.io/instance: arc-common
+        app.kubernetes.io/part-of: arc
     data:
       OBJECT_DETECTION_URL: ${OBJECT_DETECTION_URL}
 
