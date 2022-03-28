@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: gogs-postgresql
   annotations:
+    argocd.argoproj.io/sync-wave: "2"
     image.openshift.io/triggers: >-
         [{"from":{"kind":"ImageStreamTag","name":"postgresql:latest", "namespace":"openshift"},"fieldPath":"spec.template.spec.containers[?(@.name==\"postgresql\")].image"}]
   labels:
@@ -74,6 +75,8 @@ metadata:
   name: gogs-postgresql
   labels:
     app: gogs
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   ports:
   - name: postgresql
@@ -93,6 +96,8 @@ metadata:
     app.kubernetes.io/instance: gogs
     app.kubernetes.io/name: gogs
     app.kubernetes.io/part-of: gogs
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 1
   selector:
@@ -155,6 +160,8 @@ metadata:
   labels:
     app: gogs
   name: gogs
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   ports:
   - name: 3000-tcp
@@ -172,6 +179,8 @@ metadata:
   labels:
     app: gogs
   name: gogs
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   to:
     kind: Service
@@ -189,6 +198,8 @@ metadata:
   name: gogs-data
   labels:
     app: gogs
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   accessModes:
     - ReadWriteOnce
@@ -202,6 +213,8 @@ metadata:
   name: gogs-postgres-data
   labels:
     app: gogs
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   accessModes:
     - ReadWriteOnce

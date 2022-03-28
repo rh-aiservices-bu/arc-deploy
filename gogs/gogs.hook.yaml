@@ -27,6 +27,8 @@ metadata:
     app.kubernetes.io/managed-by: EventListener
     app.kubernetes.io/part-of: Triggers
     eventlistener: webhook
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   port:
     targetPort: 8080
@@ -39,6 +41,8 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
   name: gogs-triggerbinding
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   params:
   - name: gitrevision

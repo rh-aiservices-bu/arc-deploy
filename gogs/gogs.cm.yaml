@@ -4,6 +4,8 @@ metadata:
   name: gogs-config
   labels:
     app: gogs
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 data:
   app.ini: |
     RUN_MODE = prod
