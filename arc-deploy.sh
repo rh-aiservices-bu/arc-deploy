@@ -19,7 +19,7 @@ fi
 
 GIT_ORG="${GIT_ORG:-"https://github.com/rh-aiservices-bu"}"
 GIT_PREFIX="${GIT_PREFIX:-"${GIT_ORG}/arc-"}"
-# GIT_REF="${GIT_REF:-"main"}"
+GIT_REF="${GIT_REF:-"main"}"
 
 # #APP_GIT_REPO="${APP_GIT_REPO:-"${GIT_PREFIX}app#dev"}"
 # APP_GIT_REPO="${APP_GIT_REPO:-"${GIT_PREFIX}app#${GIT_REF}"}"
@@ -61,7 +61,7 @@ fi
 # ## Argocd Instance
 printf "Deploy private instance of ArgoCD\n"
 oc -n $ARC_PROJ apply \
-    -k "${GIT_ORG}/arc-deploy/argocd-instance/?ref=dev"
+    -k "${GIT_ORG}/arc-deploy/argocd-instance/?ref=${GIT_REF}"
 
 printf "wait for argocd route\n"
 timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get routes \
@@ -70,7 +70,7 @@ timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get routes \
 function deploy_and_patch () {
     printf "Deploy the apps\n"
     oc -n ${ARC_PROJ} apply \
-        -k "${GIT_ORG}/car-deploy/argocd-apps/?ref=dev"
+        -k "${GIT_ORG}/car-deploy/argocd-apps/?ref=${GIT_REF}"
 
     printf "Patch them to add the namespace\n"
     for app in $(oc -n ${ARC_PROJ} get applications --no-headers |  awk '{ print $1 }') ; do
