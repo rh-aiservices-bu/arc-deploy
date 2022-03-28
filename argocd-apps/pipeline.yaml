@@ -25,7 +25,7 @@ spec:
         duration: 5s
         factor: 1
         maxDuration: 10m
-      limit: 100
+      limit: 120
   # ignoreDifferences:
   # - group: apps
   #   kind: Deployment
