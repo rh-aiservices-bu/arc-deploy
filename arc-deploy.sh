@@ -93,7 +93,7 @@ timeout 600s bash -c -- "until oc -n ${ARC_PROJ} get pods \
     | grep 'gogs-initialize' \
     | grep  'Completed'  > /dev/null 2>&1; do printf '.' ; sleep 1 ;done"
 
-deploy_and_patch
+#deploy_and_patch
 
 # timeout 30s bash -c -- "while oc -n ${ARC_PROJ} get applications \
 #     | grep  Unknown  > /dev/null 2>&1; do oc -n ${ARC_PROJ} get applications ; sleep 5 ;done"
