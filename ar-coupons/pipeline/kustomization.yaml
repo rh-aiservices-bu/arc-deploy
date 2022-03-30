@@ -8,3 +8,5 @@ resources:
   - 10_model_pipeline.yaml
   - 11_frontend_pipeline.yaml
   - 05_taskrun.yaml
+  - https://raw.githubusercontent.com/tektoncd/catalog/main/task/git-clone/0.5/git-clone.yaml
+  - yamllint_task.yaml
