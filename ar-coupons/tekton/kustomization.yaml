@@ -17,3 +17,7 @@ resources:
   - pipelines/11_frontend_pipeline.yaml
   - pipelines/12_syntaxchecks_pipeline.yaml
   - pipelines/12_syntaxchecks_pipelineRuns.yaml
+  - triggers/01_TriggerBinding.yaml
+  - triggers/02_TriggerTemplate.yaml
+  - triggers/03_Trigger.yaml
+  - triggers/04_EventListener.yaml

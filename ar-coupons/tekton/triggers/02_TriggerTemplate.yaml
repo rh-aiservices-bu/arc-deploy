@@ -1,0 +1,51 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: tt-syntax
+spec:
+  params:
+    - name: gitrevision
+      description: The git revision
+      default: dev
+    - name: gitrepositoryurl
+      description: The git repository url
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: triggered-pipeline-run-
+      spec:
+        # serviceAccountName: tekton-triggers-example-sa
+        pipelineRef:
+          name: syntax-pipeline
+        workspaces:
+          - name: shared-workspace
+            persistentvolumeclaim:
+              claimName: source-pvc
+        params:
+          - name: git-instance-prefix
+            value: http://gogs:3000/gogs
+          - name: git-ref
+            value: dev
+            # resources:
+            #   - name: source-repo
+            #     resourceSpec:
+            #       type: git
+            #       params:
+            #         - name: revision
+            #           value: $(tt.params.gitrevision)
+            #         - name: url
+            #           value: $(tt.params.gitrepositoryurl)
+            #   - name: image-source
+            #     resourceSpec:
+            #       type: image
+            #       params:
+            #         - name: url
+            #           value: DOCKERREPO-REPLACEME    # docker-repo-location.com/repo:getting-started
+            #   - name: event-to-sink
+            #     resourceSpec:
+            #       type: cloudEvent
+            #       params:
+            #         - name: targetURI
+            #           value: http://event-display.getting-started.svc.cluster.local

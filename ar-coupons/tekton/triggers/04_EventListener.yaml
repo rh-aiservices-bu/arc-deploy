@@ -1,0 +1,12 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: el-syntax
+spec:
+  # serviceAccountName: tekton-triggers-example-sa
+  triggers:
+    - bindings:
+        - ref: tb-syntax
+      template:
+        ref: tt-syntax

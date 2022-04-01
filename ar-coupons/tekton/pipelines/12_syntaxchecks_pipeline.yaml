@@ -20,8 +20,6 @@ spec:
       default: "dev"
   workspaces:
     - name: shared-workspace
-      # persistentvolumeclaim:
-      #   claimName: source-pvc
   tasks:
     ## get repo
     - name: fetch-deploy-repo
@@ -33,7 +31,6 @@ spec:
       params:
         - name: url
           value: "$(params.git-instance-prefix)/arc-deploy"
-          # value: https://github.com/rh-aiservices-bu/arc-deploy
         - name: revision
           value: "$(params.git-ref)"
         - name: subdirectory
@@ -61,7 +58,6 @@ spec:
       params:
         - name: url
           value: "$(params.git-instance-prefix)/arc-rest"
-          # value: https://github.com/rh-aiservices-bu/arc-rest
         - name: subdirectory
           value: "rest"
         - name: deleteExisting
@@ -79,9 +75,7 @@ spec:
       params:
         - name: args
           value: [".", "--check", "--diff"]
-  finally:
-    - name: cleanup-test
-      taskRef:
-        name: cleanup
-        # - name: image
-        #   value: python:3.8-slim
+          # finally:
+          #   - name: cleanup-test
+          #     taskRef:
+          #       name: cleanup
