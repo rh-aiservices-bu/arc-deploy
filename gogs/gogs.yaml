@@ -124,25 +124,25 @@ spec:
         - name: gogs-config
           mountPath: /etc/gogs/conf
         readinessProbe:
-            httpGet:
-              path: /
-              port: 3000
-              scheme: HTTP
-            initialDelaySeconds: 40
-            timeoutSeconds: 1
-            periodSeconds: 20
-            successThreshold: 1
-            failureThreshold: 10
+          httpGet:
+            path: /
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 40
+          timeoutSeconds: 1
+          periodSeconds: 20
+          successThreshold: 1
+          failureThreshold: 10
         livenessProbe:
-            httpGet:
-              path: /
-              port: 3000
-              scheme: HTTP
-            initialDelaySeconds: 40
-            timeoutSeconds: 1
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 10
+          httpGet:
+            path: /
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 40
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 10
       volumes:
       - name: gogs-data
         persistentVolumeClaim:
@@ -151,8 +151,8 @@ spec:
         configMap:
           name: gogs-config
           items:
-            - key: app.ini
-              path: app.ini
+          - key: app.ini
+            path: app.ini
 ---
 kind: Service
 apiVersion: v1
@@ -202,7 +202,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
@@ -217,7 +217,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
