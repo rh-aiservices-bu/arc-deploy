@@ -4,6 +4,17 @@ kind: Pipeline
 metadata:
   name: syntax-pipeline
 spec:
+  params:
+    - name: git-instance-prefix
+      type: string
+      description:  >-
+        Whether to use github or gogs. Use either https://github.com/rh-aiservices-bu/ or http://gogs/
+      default: "https://github.com/rh-aiservices-bu/"
+    - name: git-ref
+      type: string
+      description:  >-
+        git ref to use. (branch, label, commit, etc..)
+      default: "dev"
   workspaces:
     - name: shared-workspace
   tasks:
@@ -16,9 +27,10 @@ spec:
           workspace: shared-workspace
       params:
         - name: url
-          value: https://github.com/rh-aiservices-bu/arc-deploy
+          value: "$(params.git-instance-prefix)/arc-deploy"
+          # value: https://github.com/rh-aiservices-bu/arc-deploy
         - name: revision
-          value: "dev"
+          value: "$(params.git-ref)"
         - name: subdirectory
           value: "deploy"
         - name: deleteExisting
@@ -35,8 +47,6 @@ spec:
       params:
         - name: args
           value: ["."]
-
-
     - name: fetch-model-repo
       taskRef:
         name: git-clone
@@ -45,13 +55,14 @@ spec:
           workspace: shared-workspace
       params:
         - name: url
-          value: https://github.com/rh-aiservices-bu/arc-rest
+          value: "$(params.git-instance-prefix)/arc-rest"
+          # value: https://github.com/rh-aiservices-bu/arc-rest
         - name: subdirectory
           value: "rest"
         - name: deleteExisting
           value: "true"
         - name: revision
-          value: "dev"
+          value: "$(params.git-ref)"
     - name: python-black-run
       taskRef:
         name: python-black

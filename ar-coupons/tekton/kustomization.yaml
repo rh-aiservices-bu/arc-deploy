@@ -8,6 +8,7 @@ resources:
   - tasks/02_update_deployment_task.yaml
   - tasks/python-black.yaml
   - tasks/yaml-lint.yaml
+  - tasks/git-clone.yaml
   - tasks/cleanup.yaml
   ## pipelines
   - pipelines/03_persistent_volume_claim.yaml
