@@ -2,7 +2,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: syntax-pipeline-github
+  name: syntax-pipeline-github-arc-deploy
 spec:
   pipelineRef:
     name: syntax-pipeline
@@ -15,11 +15,13 @@ spec:
       value: https://github.com/rh-aiservices-bu
     - name: git-ref
       value: dev
+    - name: git-repo-name
+      value: arc-deploy
 ---
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: syntax-pipeline-gogs
+  name: syntax-pipeline-gogs-arc-deploy
 spec:
   pipelineRef:
     name: syntax-pipeline
@@ -32,3 +34,82 @@ spec:
       value: http://gogs:3000/gogs
     - name: git-ref
       value: dev
+    - name: git-repo-name
+      value: arc-deploy
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: syntax-pipeline-github-arc-rest
+spec:
+  pipelineRef:
+    name: syntax-pipeline
+  workspaces:
+    - name: shared-workspace
+      persistentvolumeclaim:
+        claimName: source-pvc1
+  params:
+    - name: git-instance-prefix
+      value: https://github.com/rh-aiservices-bu
+    - name: git-ref
+      value: dev
+    - name: git-repo-name
+      value: arc-rest
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: syntax-pipeline-gogs-arc-rest
+spec:
+  pipelineRef:
+    name: syntax-pipeline
+  workspaces:
+    - name: shared-workspace
+      persistentvolumeclaim:
+        claimName: source-pvc2
+  params:
+    - name: git-instance-prefix
+      value: http://gogs:3000/gogs
+    - name: git-ref
+      value: dev
+    - name: git-repo-name
+      value: arc-rest
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: syntax-pipeline-github-arc-kafka
+spec:
+  pipelineRef:
+    name: syntax-pipeline
+  workspaces:
+    - name: shared-workspace
+      persistentvolumeclaim:
+        claimName: source-pvc1
+  params:
+    - name: git-instance-prefix
+      value: https://github.com/rh-aiservices-bu
+    - name: git-ref
+      value: dev
+    - name: git-repo-name
+      value: arc-kafka
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: syntax-pipeline-gogs-arc-kafka
+spec:
+  pipelineRef:
+    name: syntax-pipeline
+  workspaces:
+    - name: shared-workspace
+      persistentvolumeclaim:
+        claimName: source-pvc2
+  params:
+    - name: git-instance-prefix
+      value: http://gogs:3000/gogs
+    - name: git-ref
+      value: dev
+    - name: git-repo-name
+      value: arc-kafka
+

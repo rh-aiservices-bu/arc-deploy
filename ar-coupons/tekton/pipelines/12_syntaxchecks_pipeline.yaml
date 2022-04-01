@@ -13,6 +13,11 @@ spec:
         or
         http://gogs:3000/gogs
       default: "http://gogs:3000/gogs"
+    - name: git-repo-name
+      type: string
+      description: >-
+        something like arc-deploy or arc-rest
+      default: "arc-deploy"
     - name: git-ref
       type: string
       description: >-
@@ -22,7 +27,7 @@ spec:
     - name: shared-workspace
   tasks:
     ## get repo
-    - name: fetch-deploy-repo
+    - name: git-clone-repo
       taskRef:
         name: git-clone
       workspaces:
@@ -30,11 +35,11 @@ spec:
           workspace: shared-workspace
       params:
         - name: url
-          value: "$(params.git-instance-prefix)/arc-deploy"
+          value: "$(params.git-instance-prefix)/$(params.git-repo-name)"
         - name: revision
           value: "$(params.git-ref)"
         - name: subdirectory
-          value: "deploy"
+          value: "$(params.git-repo-name)"
         - name: deleteExisting
           value: "true"
     ## yaml-lint
@@ -42,33 +47,33 @@ spec:
       taskRef:
         name: yaml-lint
       runAfter:
-        - fetch-deploy-repo
+        - git-clone-repo
       workspaces:
         - name: shared-workspace
           workspace: shared-workspace
       params:
         - name: args
           value: ["."]
-    - name: fetch-model-repo
-      taskRef:
-        name: git-clone
-      workspaces:
-        - name: output
-          workspace: shared-workspace
-      params:
-        - name: url
-          value: "$(params.git-instance-prefix)/arc-rest"
-        - name: subdirectory
-          value: "rest"
-        - name: deleteExisting
-          value: "true"
-        - name: revision
-          value: "$(params.git-ref)"
+    # - name: fetch-model-repo
+    #   taskRef:
+    #     name: git-clone
+    #   workspaces:
+    #     - name: output
+    #       workspace: shared-workspace
+    #   params:
+    #     - name: url
+    #       value: "$(params.git-instance-prefix)/arc-rest"
+    #     - name: subdirectory
+    #       value: "rest"
+    #     - name: deleteExisting
+    #       value: "true"
+    #     - name: revision
+    #       value: "$(params.git-ref)"
     - name: python-black-run
       taskRef:
         name: python-black
       runAfter:
-        - fetch-model-repo
+        - git-clone-repo
       workspaces:
         - name: shared-workspace
           workspace: shared-workspace
