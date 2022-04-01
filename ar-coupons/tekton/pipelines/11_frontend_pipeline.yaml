@@ -5,131 +5,127 @@ metadata:
   name: frontend-pipeline
 spec:
   workspaces:
-  - name: shared-workspace
+    - name: shared-workspace
   params:
-  - name: deployment-name
-    type: string
-    description: name of the deployment to be patched
-    default: "k8s"
-  # - name: git-url
-  #   type: string
-  #   description: url of the git repo for the code of deployment
-  # - name: git-revision
-  #   type: string
-  #   description: revision to be used from repo of the code for deployment
-  #   default: "master"
-  # - name: IMAGE
-  #   type: string
-  #   description: image to be build from the code
+    - name: deployment-name
+      type: string
+      description: name of the deployment to be patched
+      default: "k8s"
+      # - name: git-url
+      #   type: string
+      #   description: url of the git repo for the code of deployment
+      # - name: git-revision
+      #   type: string
+      #   description: revision to be used from repo of the code for deployment
+      #   default: "master"
+      # - name: IMAGE
+      #   type: string
+      #   description: image to be build from the code
   tasks:
-  # - name: fetch-repository
-  #   taskRef:
-  #     name: git-clone
-  #     kind: ClusterTask
-  #   workspaces:
-  #   - name: output
-  #     workspace: shared-workspace
-  #   params:
-  #   - name: url
-  #     value: $(params.git-url)
-  #   - name: subdirectory
-  #     value: ""
-  #   - name: deleteExisting
-  #     value: "true"
-  #   - name: revision
-  #     value: $(params.git-revision)
-  # - name: build-image
-  #   taskRef:
-  #     name: buildah
-  #     kind: ClusterTask
-  #   params:
-  #   - name: IMAGE
-  #     value: $(params.IMAGE)
-  #   workspaces:
-  #   - name: source
-  #     workspace: shared-workspace
-  #   runAfter:
-  #   - fetch-repository
-  - name: start
-    taskRef:
-      name: apply-manifests
-    workspaces:
-    - name: source
-      workspace: shared-workspace
-  - name: git-clone-frontend
-    taskRef:
-      name: apply-manifests
-    workspaces:
-    - name: source
-      workspace: shared-workspace
-    # runAfter:
-    # - build-image
-    runAfter:
-    - start
-  - name: lint-and-syntax-frontend
-    taskRef:
-      name: apply-manifests
-    workspaces:
-    - name: source
-      workspace: shared-workspace
-    runAfter:
-    - git-clone-frontend
-  - name: build-frontend-image
-    taskRef:
-      name: apply-manifests
-    workspaces:
-    - name: source
-      workspace: shared-workspace
-    runAfter:
-    - lint-and-syntax-frontend
-  - name: sanity-check-frontend
-    taskRef:
-      name: apply-manifests
-    workspaces:
-    - name: source
-      workspace: shared-workspace
-    runAfter:
-    - build-frontend-image
-  - name: performance-check-frontend
-    taskRef:
-      name: apply-manifests
-    workspaces:
-    - name: source
-      workspace: shared-workspace
-    runAfter:
-    - build-frontend-image
-  - name: security-scan-frontend
-    taskRef:
-      name: apply-manifests
-    workspaces:
-    - name: source
-      workspace: shared-workspace
-    runAfter:
-    - build-frontend-image
-  - name: trigger-move-to-production
-    taskRef:
-      name: apply-manifests
-    workspaces:
-    - name: source
-      workspace: shared-workspace
-    runAfter:
-    - security-scan-frontend
-    - performance-check-frontend
-    - sanity-check-frontend
-  # - name: update-deployment
-  #   taskRef:
-  #     name: update-deployment
-  #   params:
-  #   - name: deployment
-  #     value: $(params.deployment-name)
-  #   # - name: IMAGE
-  #   #   value: $(params.IMAGE)
-  #   runAfter:
-  #   - start
-
-
-
-
+    # - name: fetch-repository
+    #   taskRef:
+    #     name: git-clone
+    #     kind: ClusterTask
+    #   workspaces:
+    #   - name: output
+    #     workspace: shared-workspace
+    #   params:
+    #   - name: url
+    #     value: $(params.git-url)
+    #   - name: subdirectory
+    #     value: ""
+    #   - name: deleteExisting
+    #     value: "true"
+    #   - name: revision
+    #     value: $(params.git-revision)
+    # - name: build-image
+    #   taskRef:
+    #     name: buildah
+    #     kind: ClusterTask
+    #   params:
+    #   - name: IMAGE
+    #     value: $(params.IMAGE)
+    #   workspaces:
+    #   - name: source
+    #     workspace: shared-workspace
+    #   runAfter:
+    #   - fetch-repository
+    - name: start
+      taskRef:
+        name: apply-manifests
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: git-clone-frontend
+      taskRef:
+        name: apply-manifests
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+          # runAfter:
+          # - build-image
+      runAfter:
+        - start
+    - name: lint-and-syntax-frontend
+      taskRef:
+        name: apply-manifests
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - git-clone-frontend
+    - name: build-frontend-image
+      taskRef:
+        name: apply-manifests
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - lint-and-syntax-frontend
+    - name: sanity-check-frontend
+      taskRef:
+        name: apply-manifests
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - build-frontend-image
+    - name: performance-check-frontend
+      taskRef:
+        name: apply-manifests
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - build-frontend-image
+    - name: security-scan-frontend
+      taskRef:
+        name: apply-manifests
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - build-frontend-image
+    - name: trigger-move-to-production
+      taskRef:
+        name: apply-manifests
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - security-scan-frontend
+        - performance-check-frontend
+        - sanity-check-frontend
+        # - name: update-deployment
+        #   taskRef:
+        #     name: update-deployment
+        #   params:
+        #   - name: deployment
+        #     value: $(params.deployment-name)
+        #   # - name: IMAGE
+        #   #   value: $(params.IMAGE)
+        #   runAfter:
+        #   - start
 
 # git clone models
 #   lint+syntax-check models
@@ -140,4 +136,3 @@ spec:
 # syntax check yaml pieces
 # syntax check python pieces
 # trigger
-

@@ -50,4 +50,3 @@ objects:
         app.kubernetes.io/part-of: arc
     data:
       OBJECT_DETECTION_URL: ${OBJECT_DETECTION_URL}
-

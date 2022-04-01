@@ -52,7 +52,7 @@ spec:
           value: "true"
         - name: revision
           value: "dev"
-    - name: python-black-run #python code prettier
+    - name: python-black-run
       taskRef:
         name: python-black
       runAfter:

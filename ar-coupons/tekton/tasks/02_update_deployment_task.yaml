@@ -8,9 +8,9 @@ spec:
     - name: deployment
       description: The name of the deployment patch the image
       type: string
-    # - name: IMAGE
-    #   description: Location of image to be patched with
-    #   type: string
+      # - name: IMAGE
+      #   description: Location of image to be patched with
+      #   type: string
   steps:
     - name: patch
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
