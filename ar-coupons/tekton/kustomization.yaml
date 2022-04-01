@@ -16,3 +16,4 @@ resources:
   - pipelines/10_model_pipeline.yaml
   - pipelines/11_frontend_pipeline.yaml
   - pipelines/12_syntaxchecks_pipeline.yaml
+  - pipelines/12_syntaxchecks_pipelineRuns.yaml

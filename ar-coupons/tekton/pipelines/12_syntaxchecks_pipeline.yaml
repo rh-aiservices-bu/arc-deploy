@@ -7,16 +7,21 @@ spec:
   params:
     - name: git-instance-prefix
       type: string
-      description:  >-
-        Whether to use github or gogs. Use either https://github.com/rh-aiservices-bu/ or http://gogs/
-      default: "https://github.com/rh-aiservices-bu/"
+      description: >-
+        Whether to use github or gogs.
+        Use either https://github.com/rh-aiservices-bu
+        or
+        http://gogs:3000/gogs
+      default: "http://gogs:3000/gogs"
     - name: git-ref
       type: string
-      description:  >-
+      description: >-
         git ref to use. (branch, label, commit, etc..)
       default: "dev"
   workspaces:
     - name: shared-workspace
+      # persistentvolumeclaim:
+      #   claimName: source-pvc
   tasks:
     ## get repo
     - name: fetch-deploy-repo
@@ -80,94 +85,3 @@ spec:
         name: cleanup
         # - name: image
         #   value: python:3.8-slim
----
-apiVersion: tekton.dev/v1beta1
-kind: PipelineRun
-metadata:
-  name: syntax-pipeline-run
-spec:
-  pipelineRef:
-    name: syntax-pipeline
-  workspaces:
-    - name: shared-workspace
-      persistentvolumeclaim:
-        claimName: source-pvc1
-
-# ---
-# apiVersion: tekton.dev/v1beta1
-# kind: Pipeline
-# metadata:
-#   name: syntaxcheck-pipeline
-# spec:
-#   workspaces:
-#   - name: shared-workspace
-#   params:
-#   - name: deployment-name
-#     type: string
-#     description: name of the deployment to be patched
-#     default: "k8s"
-#   tasks:
-#   - name: start
-#     taskRef:
-#       name: apply-manifests
-#     workspaces:
-#     - name: source
-#       workspace: shared-workspace
-#   - name: git-clone-frontend
-#     taskRef:
-#       name: apply-manifests
-#     workspaces:
-#     - name: source
-#       workspace: shared-workspace
-#     runAfter:
-#     - start
-#   - name: lint-and-syntax-frontend
-#     taskRef:
-#       name: apply-manifests
-#     workspaces:
-#     - name: source
-#       workspace: shared-workspace
-#     runAfter:
-#     - git-clone-frontend
-#   - name: build-frontend-image
-#     taskRef:
-#       name: apply-manifests
-#     workspaces:
-#     - name: source
-#       workspace: shared-workspace
-#     runAfter:
-#     - lint-and-syntax-frontend
-#   - name: sanity-check-frontend
-#     taskRef:
-#       name: apply-manifests
-#     workspaces:
-#     - name: source
-#       workspace: shared-workspace
-#     runAfter:
-#     - build-frontend-image
-#   - name: performance-check-frontend
-#     taskRef:
-#       name: apply-manifests
-#     workspaces:
-#     - name: source
-#       workspace: shared-workspace
-#     runAfter:
-#     - build-frontend-image
-#   - name: security-scan-frontend
-#     taskRef:
-#       name: apply-manifests
-#     workspaces:
-#     - name: source
-#       workspace: shared-workspace
-#     runAfter:
-#     - build-frontend-image
-#   - name: trigger-move-to-production
-#     taskRef:
-#       name: apply-manifests
-#     workspaces:
-#     - name: source
-#       workspace: shared-workspace
-#     runAfter:
-#     - security-scan-frontend
-#     - performance-check-frontend
-#     - sanity-check-frontend

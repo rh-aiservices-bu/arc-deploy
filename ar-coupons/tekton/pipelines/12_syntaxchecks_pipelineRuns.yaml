@@ -1,0 +1,34 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: syntax-pipeline-github
+spec:
+  pipelineRef:
+    name: syntax-pipeline
+  workspaces:
+    - name: shared-workspace
+      persistentvolumeclaim:
+        claimName: source-pvc1
+  params:
+    - name: git-instance-prefix
+      value: https://github.com/rh-aiservices-bu
+    - name: git-ref
+      value: dev
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: syntax-pipeline-gogs
+spec:
+  pipelineRef:
+    name: syntax-pipeline
+  workspaces:
+    - name: shared-workspace
+      persistentvolumeclaim:
+        claimName: source-pvc2
+  params:
+    - name: git-instance-prefix
+      value: http://gogs:3000/gogs
+    - name: git-ref
+      value: dev
