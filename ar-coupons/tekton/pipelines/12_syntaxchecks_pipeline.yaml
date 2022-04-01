@@ -1,0 +1,164 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: linter-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: linter-pipeline
+spec:
+  workspaces:
+    - name: shared-workspace
+  tasks:
+    - name: fetch-repository
+      taskRef:
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      params:
+        - name: url
+          value: https://github.com/rh-aiservices-bu/arc-deploy
+        - name: revision
+          value: "dev"
+        - name: subdirectory
+          value: ""
+        - name: deleteExisting
+          value: "true"
+    - name: yaml-lint-run #lint yaml
+      taskRef:
+        name: yaml-lint
+      runAfter:
+        - fetch-repository
+      workspaces:
+        - name: shared-workspace
+          workspace: shared-workspace
+      params:
+        - name: args
+          value: ["."]
+    - name: fetch-repository-model
+      taskRef:
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      params:
+        - name: url
+          value: https://github.com/rh-aiservices-bu/arc-rest
+        - name: subdirectory
+          value: ""
+        - name: deleteExisting
+          value: "true"
+        - name: revision
+          value: "dev"
+    - name: python-black-run #python code prettier
+      taskRef:
+        name: black
+      runAfter:
+        - fetch-repository-model
+      workspaces:
+        - name: shared-workspace
+          workspace: shared-workspace
+      params:
+        - name: args
+          value: [".", "--check", "--diff"]
+        - name: image
+          value: python:3.8-slim
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: linter-pipeline-run
+spec:
+  pipelineRef:
+    name: linter-pipeline
+  workspaces:
+    - name: shared-workspace
+      persistentvolumeclaim:
+        claimName: linter-pvc
+
+# ---
+# apiVersion: tekton.dev/v1beta1
+# kind: Pipeline
+# metadata:
+#   name: syntaxcheck-pipeline
+# spec:
+#   workspaces:
+#   - name: shared-workspace
+#   params:
+#   - name: deployment-name
+#     type: string
+#     description: name of the deployment to be patched
+#     default: "k8s"
+#   tasks:
+#   - name: start
+#     taskRef:
+#       name: apply-manifests
+#     workspaces:
+#     - name: source
+#       workspace: shared-workspace
+#   - name: git-clone-frontend
+#     taskRef:
+#       name: apply-manifests
+#     workspaces:
+#     - name: source
+#       workspace: shared-workspace
+#     runAfter:
+#     - start
+#   - name: lint-and-syntax-frontend
+#     taskRef:
+#       name: apply-manifests
+#     workspaces:
+#     - name: source
+#       workspace: shared-workspace
+#     runAfter:
+#     - git-clone-frontend
+#   - name: build-frontend-image
+#     taskRef:
+#       name: apply-manifests
+#     workspaces:
+#     - name: source
+#       workspace: shared-workspace
+#     runAfter:
+#     - lint-and-syntax-frontend
+#   - name: sanity-check-frontend
+#     taskRef:
+#       name: apply-manifests
+#     workspaces:
+#     - name: source
+#       workspace: shared-workspace
+#     runAfter:
+#     - build-frontend-image
+#   - name: performance-check-frontend
+#     taskRef:
+#       name: apply-manifests
+#     workspaces:
+#     - name: source
+#       workspace: shared-workspace
+#     runAfter:
+#     - build-frontend-image
+#   - name: security-scan-frontend
+#     taskRef:
+#       name: apply-manifests
+#     workspaces:
+#     - name: source
+#       workspace: shared-workspace
+#     runAfter:
+#     - build-frontend-image
+#   - name: trigger-move-to-production
+#     taskRef:
+#       name: apply-manifests
+#     workspaces:
+#     - name: source
+#       workspace: shared-workspace
+#     runAfter:
+#     - security-scan-frontend
+#     - performance-check-frontend
+#     - sanity-check-frontend
