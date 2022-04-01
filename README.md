@@ -21,3 +21,17 @@ export GIT_REF=dev
 bash arc-deploy.sh arc-dev
 
 ```
+
+remove
+
+```bash
+oc new-project arc-main
+oc new-project arc-dev
+
+export GIT_REF=main
+bash arc-remove.sh arc-main
+
+export GIT_REF=dev
+bash arc-remove.sh arc-dev
+
+```
