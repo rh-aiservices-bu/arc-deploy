@@ -1,0 +1,23 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: cleanup
+spec:
+  workspaces:
+    - name: shared-workspace
+      description: A workspace that contains the fetched git repository.
+  steps:
+    - name: cleanup-part-1
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      workingDir: $(workspaces.shared-workspace.path)
+      command: ["/bin/bash", "-c"]
+      args:
+        - |-
+          echo "cleaning up"
+          #oc apply -f $(inputs.params.manifest_dir)
+          oc get pods --all-namespaces
+          echo -----------------------------------
+          pwd
+          ls -al
+          ls -alR

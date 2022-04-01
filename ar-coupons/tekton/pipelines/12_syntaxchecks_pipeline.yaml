@@ -63,6 +63,10 @@ spec:
       params:
         - name: args
           value: [".", "--check", "--diff"]
+  finally:
+    - name: cleanup-test
+      taskRef:
+        name: cleanup
         # - name: image
         #   value: python:3.8-slim
 ---
