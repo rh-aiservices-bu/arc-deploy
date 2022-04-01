@@ -3,10 +3,10 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: dev-frontend
-#  namespace: arc-test01
+
 spec:
   destination:
-#    namespace: arc-test01
+
     server: https://kubernetes.default.svc
   project: default
   source:
@@ -28,7 +28,7 @@ spec:
         maxDuration: 10m
       limit: 120
   ignoreDifferences:
-  - group: apps
-    kind: Deployment
-    jsonPointers:
-      - /spec/template/spec/containers/0/image
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/spec/containers/0/image

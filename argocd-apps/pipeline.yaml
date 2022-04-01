@@ -27,8 +27,3 @@ spec:
         factor: 1
         maxDuration: 10m
       limit: 120
-  # ignoreDifferences:
-  # - group: apps
-  #   kind: Deployment
-  #   jsonPointers:
-  #     - /spec/template/spec/containers/0/image
