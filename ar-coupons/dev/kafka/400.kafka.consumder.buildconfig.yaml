@@ -22,7 +22,8 @@ spec:
   source:
     type: Git
     git:
-      uri: 'https://github.com/rh-aiservices-bu/arc-kafka'
+      # uri: 'https://github.com/rh-aiservices-bu/arc-kafka'
+      uri: 'http://gogs:3000/gogs/arc-kafka'
       ref: dev
   output:
     to:
