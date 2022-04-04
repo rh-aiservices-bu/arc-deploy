@@ -1,0 +1,27 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: trigger-build
+spec:
+  workspaces:
+    - name: shared-workspace
+  params:
+    - name: bc-name
+      description: name of the buildconfig to trigger
+      type: string
+      default: "test"
+  steps:
+    - name: apply
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      workingDir: $(workspaces.shared-workspace.path)
+      command: ["/bin/bash", "-c"]
+      args:
+        - |-
+          echo Triggering rebuild of BC $(inputs.params.bc-name)
+          #oc apply -f $(inputs.params.bc-name)
+          #echo oc get buildconfig $(inputs.params.bc-name) -n $(context.taskRun.namespace)
+          #oc get buildconfig $(inputs.params.bc-name) -n $(context.taskRun.namespace)
+          time oc -n $(context.taskRun.namespace) start-build $(inputs.params.bc-name) --wait --follow
+          # oc start-build ruby-ex
+          echo -----------------------------------

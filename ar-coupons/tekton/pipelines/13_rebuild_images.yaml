@@ -1,0 +1,43 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: rebuild-images-pipeline
+spec:
+  workspaces:
+    - name: shared-workspace
+  tasks:
+    - name: rebuild-frontend
+      taskRef:
+        name: trigger-build
+      workspaces:
+        - name: shared-workspace
+          workspace: shared-workspace
+      params:
+        - name: bc-name
+          value: dev-arc-frontend
+    - name: rebuild-model
+      taskRef:
+        name: trigger-build
+      workspaces:
+        - name: shared-workspace
+          workspace: shared-workspace
+      params:
+        - name: bc-name
+          value: dev-arc-model
+    - name: rebuild-kafkaconsumer
+      taskRef:
+        name: trigger-build
+      workspaces:
+        - name: shared-workspace
+          workspace: shared-workspace
+      params:
+        - name: bc-name
+          value: dev-arc-kafkaconsumer
+  finally:
+    - name: cleanup-test
+      taskRef:
+        name: cleanup
+      workspaces:
+        - name: shared-workspace
+          workspace: shared-workspace

@@ -4,7 +4,7 @@ kind: Kustomization
 
 resources:
   ## tasks:
-  - tasks/01_apply_manifest_task.yaml
+  - tasks/01_trigger_build.yaml
   - tasks/02_update_deployment_task.yaml
   - tasks/python-black.yaml
   - tasks/yaml-lint.yaml
@@ -17,6 +17,8 @@ resources:
   - pipelines/11_frontend_pipeline.yaml
   - pipelines/12_syntaxchecks_pipeline.yaml
   - pipelines/12_syntaxchecks_pipelineRuns.yaml
+  - pipelines/13_rebuild_images.yaml
+  - pipelines/13_rebuild_images_pipelineRun.yaml
   - triggers/01_TriggerBinding.yaml
   - triggers/02_TriggerTemplate.yaml
   - triggers/03_Trigger.yaml

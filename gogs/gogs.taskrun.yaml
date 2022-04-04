@@ -76,8 +76,8 @@ spec:
             print("Created git repo arc-deploy")
           #
           #
-          # create git repo arc-rest
-          data_repo = '{"clone_addr": "https://github.com/rh-aiservices-bu/arc-rest", "uid": 1, "repo_name": "arc-model"}'
+          # create git repo arc-model
+          data_repo = '{"clone_addr": "https://github.com/rh-aiservices-bu/arc-model", "uid": 1, "repo_name": "arc-model"}'
           headers = {'Content-Type': 'application/json'}
           resp = requests.post(url = gogsURL + "/api/v1/repos/migrate", headers = headers, auth = (gogs_user, gogs_pwd), data = data_repo)
           if resp.status_code != 200 and resp.status_code != 201:
@@ -85,7 +85,7 @@ spec:
             print(resp.content)
             print("")
           else:
-            print("Created git repo arc-rest")
+            print("Created git repo arc-model")
           #
           #
           # create git repo arc-deploy
@@ -123,7 +123,7 @@ spec:
           #            print(resp.content)
           #          else:
           #            print("Configured webhook: " + webhookURL)
-          # create git repo arc-rest
+          # create git repo arc-model
           #          data_repo = '{"clone_addr": "https://github.com/siamaksade/spring-petclinic-config.git", "uid": 1, "repo_name": "spring-petclinic-config"}'
           #          headers = {'Content-Type': 'application/json'}
           #          resp = requests.post(url = gogsURL + "/api/v1/repos/migrate", headers = headers, auth = (gogs_user, gogs_pwd), data = data_repo)

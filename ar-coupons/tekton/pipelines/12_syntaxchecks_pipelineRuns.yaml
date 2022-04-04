@@ -40,7 +40,7 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: syntax-pipeline-github-arc-rest
+  name: syntax-pipeline-github-arc-model
 spec:
   pipelineRef:
     name: syntax-pipeline
@@ -54,12 +54,12 @@ spec:
     - name: git-ref
       value: dev
     - name: git-repo-name
-      value: arc-rest
+      value: arc-model
 ---
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: syntax-pipeline-gogs-arc-rest
+  name: syntax-pipeline-gogs-arc-model
 spec:
   pipelineRef:
     name: syntax-pipeline
@@ -73,7 +73,7 @@ spec:
     - name: git-ref
       value: dev
     - name: git-repo-name
-      value: arc-rest
+      value: arc-model
 ---
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
@@ -112,4 +112,3 @@ spec:
       value: dev
     - name: git-repo-name
       value: arc-kafka
-

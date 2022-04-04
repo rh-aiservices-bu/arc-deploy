@@ -68,7 +68,7 @@ timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get routes \
     | grep  'argocd-instance'  > /dev/null 2>&1; do printf '.' ; sleep 1 ;done"
 
 function deploy_and_patch () {
-    printf "Deploy the apps\n"
+    printf "\nDeploy the apps\n"
     oc -n ${ARC_PROJ} apply \
         -k "${GIT_ORG}/arc-deploy/argocd-apps/?ref=${GIT_REF}" | sed 's/^/    /'
 

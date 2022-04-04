@@ -32,6 +32,7 @@ export GIT_REF=main
 bash arc-remove.sh arc-main
 
 export GIT_REF=dev
-bash arc-remove.sh arc-dev
+time bash arc-remove.sh arc-dev
+time bash arc-deploy.sh arc-dev
 
 ```

@@ -16,7 +16,7 @@ spec:
     - name: git-repo-name
       type: string
       description: >-
-        something like arc-deploy or arc-rest
+        something like arc-deploy or arc-model
       default: "arc-deploy"
     - name: git-ref
       type: string
@@ -53,22 +53,7 @@ spec:
           workspace: shared-workspace
       params:
         - name: args
-          value: ["."]
-    # - name: fetch-model-repo
-    #   taskRef:
-    #     name: git-clone
-    #   workspaces:
-    #     - name: output
-    #       workspace: shared-workspace
-    #   params:
-    #     - name: url
-    #       value: "$(params.git-instance-prefix)/arc-rest"
-    #     - name: subdirectory
-    #       value: "rest"
-    #     - name: deleteExisting
-    #       value: "true"
-    #     - name: revision
-    #       value: "$(params.git-ref)"
+          value: ["$(params.git-repo-name)"]
     - name: python-black-run
       taskRef:
         name: python-black
@@ -79,8 +64,11 @@ spec:
           workspace: shared-workspace
       params:
         - name: args
-          value: [".", "--check", "--diff"]
-          # finally:
-          #   - name: cleanup-test
-          #     taskRef:
-          #       name: cleanup
+          value: ["$(params.git-repo-name)", "--check", "--diff"]
+  finally:
+    - name: cleanup-test
+      taskRef:
+        name: cleanup
+      workspaces:
+        - name: shared-workspace
+          workspace: shared-workspace

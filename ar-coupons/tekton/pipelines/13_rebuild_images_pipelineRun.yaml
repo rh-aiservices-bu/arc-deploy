@@ -1,0 +1,12 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: rebuild-images
+spec:
+  pipelineRef:
+    name: rebuild-images-pipeline
+  workspaces:
+    - name: shared-workspace
+      persistentvolumeclaim:
+        claimName: source-pvc2

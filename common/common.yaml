@@ -17,7 +17,7 @@ parameters:
   - name: KAFKA_TOPIC_IMAGES
   - name: KAFKA_TOPIC_OBJECTS
   - name: OBJECT_DETECTION_URL
-    value: "http://arc-rest:8080/predictions"
+    value: "http://arc-model:8080/predictions"
 
 objects:
   - apiVersion: v1
@@ -42,7 +42,7 @@ objects:
   - apiVersion: v1
     kind: ConfigMap
     metadata:
-      name: arc-rest
+      name: arc-model
       labels:
         app: arc-common
         app.kubernetes.io/component: arc-common

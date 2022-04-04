@@ -6,7 +6,6 @@ metadata:
 spec:
   workspaces:
     - name: shared-workspace
-      description: A workspace that contains the fetched git repository.
   steps:
     - name: cleanup-part-1
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
@@ -15,9 +14,7 @@ spec:
       args:
         - |-
           echo "cleaning up"
-          #oc apply -f $(inputs.params.manifest_dir)
-          oc get pods --all-namespaces
-          echo -----------------------------------
           pwd
           ls -al
-          ls -alR
+          rm -rf ./*
+          echo -----------------------------------
