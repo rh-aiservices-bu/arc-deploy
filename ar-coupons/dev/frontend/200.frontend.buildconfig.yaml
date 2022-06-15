@@ -22,8 +22,8 @@ spec:
   source:
     type: Git
     git:
-      # uri: 'https://github.com/rh-aiservices-bu/arc-app'
-      uri: 'http://gogs:3000/gogs/arc-app'
+      # uri: 'https://github.com/rh-aiservices-bu/arc-frontend'
+      uri: 'http://gogs:3000/gogs/arc-frontend'
       ref: dev
   output:
     to:
