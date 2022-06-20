@@ -17,14 +17,9 @@ else
     exit
 fi
 
-GIT_ORG="${GIT_ORG:-"https://github.com/rh-aiservices-bu"}"
-GIT_PREFIX="${GIT_PREFIX:-"${GIT_ORG}/arc-"}"
-GIT_REF="${GIT_REF:-"main"}"
-
-# #APP_GIT_REPO="${APP_GIT_REPO:-"${GIT_PREFIX}app#dev"}"
-# APP_GIT_REPO="${APP_GIT_REPO:-"${GIT_PREFIX}app#${GIT_REF}"}"
-# REST_GIT_REPO="${REST_GIT_REPO:-"${GIT_PREFIX}rest#${GIT_REF}"}"
-# KAFKA_GIT_REPO="${KAFKA_GIT_REPO:-"${GIT_PREFIX}kafka#${GIT_REF}"}"
+# GIT_ORG="${GIT_ORG:-"https://github.com/rh-aiservices-bu"}"
+# GIT_PREFIX="${GIT_PREFIX:-"${GIT_ORG}/arc-"}"
+# GIT_REF="${GIT_REF:-"main"}"
 
 ARC_PROJ="${1:-"not-a-project"}"
 # echo ${ARC_PROJ}
@@ -61,7 +56,7 @@ fi
 # ## Argocd Instance
 printf "Deploy private instance of ArgoCD\n"
 oc -n $ARC_PROJ apply \
-    -k "${GIT_ORG}/arc-deploy/argocd-instance/?ref=${GIT_REF}" | sed 's/^/    /'
+    -k "./argocd-instance/" | sed 's/^/    /'
 
 printf "wait for argocd route\n"
 timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get routes \
@@ -70,7 +65,7 @@ timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get routes \
 function deploy_and_patch () {
     printf "\nDeploy the apps\n"
     oc -n ${ARC_PROJ} apply \
-        -k "${GIT_ORG}/arc-deploy/argocd-apps/?ref=${GIT_REF}" | sed 's/^/    /'
+        -k "/argocd-apps/" | sed 's/^/    /'
 
     printf "Patch them to add the namespace\n"
     for app in $(oc -n ${ARC_PROJ} get applications --no-headers |  awk '{ print $1 }') ; do
@@ -124,3 +119,17 @@ timeout 300s bash -c -- "while oc -n ${ARC_PROJ} get applications \
     | grep -E 'Progressing|Unknown|Missing|OutOfSync'  > /dev/null 2>&1; do printf '.' ; sleep 5 ;done"
 
 printf "\n"
+
+function printallURLs () {
+    printf "All URLs:\n"
+    for host in $(oc -n ${ARC_PROJ} describe route \
+        |  grep Host \
+        | awk '{ print $3 }') ; do
+    #echo " ${host}"
+        printf "   -  https://"${host}"/\n"
+    done
+    printf "\n"
+
+}
+
+printallURLs

@@ -23,7 +23,7 @@ ARC_PROJ="${1:-"not-a-project"}"
 if [[ "${ARC_PROJ}" = "not-a-project" ]]; then
     printf "You did not specify a project.\n"
     printf "Execute the script like such:\n"
-    printf "    bash arc-deploy.sh <project_name>\n\n"
+    printf "    bash arc-remove.sh <project_name>\n\n"
     exit
 fi
 
@@ -33,7 +33,7 @@ if [[ "${ARC_PROJ}" == *"openshift"* ]]; then
 fi
 
 
-printf "Patch them to add the namespace\n"
+printf "Deleting applications from the namespace\n"
 for app in $(oc -n ${ARC_PROJ} get applications --no-headers |  awk '{ print $1 }') ; do
     echo "patching ${app} with finalizer"
     oc -n ${ARC_PROJ} patch application ${app}  \
@@ -44,8 +44,8 @@ for app in $(oc -n ${ARC_PROJ} get applications --no-headers |  awk '{ print $1 
     echo "deleting ${app} with cascade"
     oc -n ${ARC_PROJ} \
         delete applications ${app}
-
 done
 
-
-
+printf "Remove instance of ArgoCD\n"
+oc -n $ARC_PROJ delete \
+    -k "./argocd-instance/" | sed 's/^/    /'
