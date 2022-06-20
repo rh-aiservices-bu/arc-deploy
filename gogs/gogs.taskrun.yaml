@@ -89,7 +89,7 @@ spec:
           #
           #
           # create git repo arc-deploy
-          data_repo = '{"clone_addr": "https://github.com/rh-aiservices-bu/arc-app", "uid": 1, "repo_name": "arc-frontend"}'
+          data_repo = '{"clone_addr": "https://github.com/rh-aiservices-bu/arc-frontend", "uid": 1, "repo_name": "arc-frontend"}'
           headers = {'Content-Type': 'application/json'}
           resp = requests.post(url = gogsURL + "/api/v1/repos/migrate", headers = headers, auth = (gogs_user, gogs_pwd), data = data_repo)
           if resp.status_code != 200 and resp.status_code != 201:
