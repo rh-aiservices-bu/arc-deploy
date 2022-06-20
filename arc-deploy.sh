@@ -69,7 +69,7 @@ timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get pods \
 function deploy_and_patch () {
     printf "\nDeploy the apps\n"
     oc -n ${ARC_PROJ} apply \
-        -k "/argocd-apps/" | sed 's/^/    /'
+        -k "./argocd-apps/" | sed 's/^/    /'
 
     printf "Patch them to add the namespace\n"
     for app in $(oc -n ${ARC_PROJ} get applications --no-headers |  awk '{ print $1 }') ; do
