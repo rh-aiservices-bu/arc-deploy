@@ -62,6 +62,10 @@ printf "wait for argocd route\n"
 timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get routes \
     | grep  'argocd-instance'  > /dev/null 2>&1; do printf '.' ; sleep 1 ;done"
 
+printf "wait for argocd instance server\n"
+timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get pods \
+    | grep  'argocd-instance-server' | grep '1/1'  > /dev/null 2>&1; do printf '.' ; sleep 1 ;done"
+
 function deploy_and_patch () {
     printf "\nDeploy the apps\n"
     oc -n ${ARC_PROJ} apply \
