@@ -115,7 +115,7 @@ done
 printf "\n"
 
 printf "Waiting (up to 10 minutes) for all apps to be done syncing\n"
-timeout 300s bash -c -- "while oc -n ${ARC_PROJ} get applications \
+timeout 600s bash -c -- "while oc -n ${ARC_PROJ} get applications \
     | grep -E 'Progressing|Unknown|Missing|OutOfSync'  > /dev/null 2>&1; do printf '.' ; sleep 5 ;done"
 
 printf "\n"
