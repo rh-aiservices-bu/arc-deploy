@@ -59,11 +59,11 @@ oc -n $ARC_PROJ apply \
     -k "./argocd-instance/" | sed 's/^/    /'
 
 printf "wait for argocd route\n"
-timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get routes \
+timeout --foreground 10s bash -c -- "until oc -n ${ARC_PROJ} get routes \
     | grep  'argocd-instance'  > /dev/null 2>&1; do printf '.' ; sleep 1 ;done"
 
 printf "wait for argocd instance server\n"
-timeout 10s bash -c -- "until oc -n ${ARC_PROJ} get pods \
+timeout --foreground 100s bash -c -- "until oc -n ${ARC_PROJ} get pods \
     | grep  'argocd-instance-server' | grep '1/1'  > /dev/null 2>&1; do printf '.' ; sleep 1 ;done"
 
 function deploy_and_patch () {
@@ -90,14 +90,12 @@ printf "You can open it in your browser to watch the progress of your apps.\n\n"
 
 
 printf "Waiting (up to 10 minutes) for gogs to deploy fully\n"
-timeout 600s bash -c -- "until oc -n ${ARC_PROJ} get pods \
+timeout --foreground 600s bash -c -- "until oc -n ${ARC_PROJ} get pods \
     | grep 'gogs-initialize' \
     | grep  'Completed'  > /dev/null 2>&1; do printf '.' ; sleep 1 ;done"
 
 deploy_and_patch
 
-# timeout 30s bash -c -- "while oc -n ${ARC_PROJ} get applications \
-#     | grep  Unknown  > /dev/null 2>&1; do oc -n ${ARC_PROJ} get applications ; sleep 5 ;done"
 
 gogs_url=$(oc -n ${ARC_PROJ} describe route | grep 'gogs' | grep Host | awk '{ print $3 }' )
  #printf "https://$(oc -n \${ARC_PROJ} describe route | grep Host | awk '{ print $3 }')/\n\n"
@@ -119,7 +117,7 @@ done
 printf "\n"
 
 printf "Waiting (up to 10 minutes) for all apps to be done syncing\n"
-timeout 600s bash -c -- "while oc -n ${ARC_PROJ} get applications \
+timeout --foreground 600s bash -c -- "while oc -n ${ARC_PROJ} get applications \
     | grep -E 'Progressing|Unknown|Missing|OutOfSync'  > /dev/null 2>&1; do printf '.' ; sleep 5 ;done"
 
 printf "\n"
